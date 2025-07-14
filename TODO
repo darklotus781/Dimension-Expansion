@@ -1,0 +1,5 @@
+Disable Flight in Dimension via config option
+- Inspired by DisableFlightAttribute from BumbleZone and onPlayerTickPre Event.
+
+Config Options:
+- Enable Grue attack, slow and steady sound build up to attack

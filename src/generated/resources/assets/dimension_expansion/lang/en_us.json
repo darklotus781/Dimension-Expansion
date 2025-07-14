@@ -1,0 +1,13 @@
+{
+  "block.dimension_expansion.burnable_torch": "Torch",
+  "block.dimension_expansion.burnable_wall_torch": "Torch",
+  "block.dimension_expansion.burned_out_torch": "Burned Out Torch",
+  "block.dimension_expansion.burned_out_wall_torch": "Burned Out Torch",
+  "block.dimension_expansion.deep_beneath_teleporter": "Deep Beneath Teleporter",
+  "block.dimension_expansion.mining_teleporter": "Mining Teleporter",
+  "block.dimension_expansion.overworld_return_teleporter": "Overworld Teleporter",
+  "block.dimension_expansion.stone_block_teleporter": "Stone Block Teleporter",
+  "creativetab.dimension_expansion.blocks": "Dimensional Expansion Blocks",
+  "death.attack.darkness": "The Darkness Consumed %1$s",
+  "subtitles.entity.player.darkness": "The Darkness Hurts"
+}

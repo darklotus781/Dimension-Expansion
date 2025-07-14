@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_torch",
+  "textures": {
+    "torch": "dimension_expansion:block/burned_out_torch"
+  }
+}

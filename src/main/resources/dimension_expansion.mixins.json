@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.lithiumcraft.dimension_expansion.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "CreateWorldScreenMixin",
+    "PrimaryLevelDataMixinNeo",
+    "WorldOpenFlowsMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

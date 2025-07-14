@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "dimension_expansion:block/stone_block_teleporter"
+    }
+  }
+}

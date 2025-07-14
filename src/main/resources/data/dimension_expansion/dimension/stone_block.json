@@ -1,0 +1,11 @@
+{
+  "type": "dimension_expansion:stone_block",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "dimension_expansion:stone_block"
+    },
+    "settings": "dimension_expansion:stone_block"
+  }
+}

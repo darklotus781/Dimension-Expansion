@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "dimension_expansion:block/deep_beneath_teleporter"
+  }
+}

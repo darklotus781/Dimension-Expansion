@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#dimension_expansion:mining_features/mining_biomes",
+  "features": ["dimension_expansion:ore_iron_small","dimension_expansion:ore_iron_middle","dimension_expansion:ore_iron_upper"],
+  "step": "underground_ores"
+}

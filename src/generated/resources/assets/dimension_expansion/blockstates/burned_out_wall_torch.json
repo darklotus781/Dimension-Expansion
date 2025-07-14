@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "dimension_expansion:block/burned_out_wall_torch"
+    },
+    "facing=north": {
+      "model": "dimension_expansion:block/burned_out_wall_torch",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "dimension_expansion:block/burned_out_wall_torch",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "dimension_expansion:block/burned_out_wall_torch",
+      "y": 180
+    }
+  }
+}
