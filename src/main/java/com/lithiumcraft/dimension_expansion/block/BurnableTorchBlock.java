@@ -23,7 +23,7 @@ public class BurnableTorchBlock extends TorchBlock {
 
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, net.minecraft.util.RandomSource random) {
-        if (!level.dimension().equals(DimensionExpansionDimensions.DEEP_BENEATH)) return;
+//        if (!level.dimension().equals(DimensionExpansionDimensions.DEEP_BENEATH)) return;
 
         // 0.1% chance to extinguish
         if (random.nextFloat() < 0.10F) {

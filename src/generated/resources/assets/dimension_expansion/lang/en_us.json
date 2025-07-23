@@ -1,4 +1,5 @@
 {
+  "block.dimension_expansion.blank_teleporter": "Teleporter Template",
   "block.dimension_expansion.burnable_torch": "Torch",
   "block.dimension_expansion.burnable_wall_torch": "Torch",
   "block.dimension_expansion.burned_out_torch": "Burned Out Torch",
@@ -7,7 +8,26 @@
   "block.dimension_expansion.mining_teleporter": "Mining Teleporter",
   "block.dimension_expansion.overworld_return_teleporter": "Overworld Teleporter",
   "block.dimension_expansion.stone_block_teleporter": "Stone Block Teleporter",
+  "block.dimension_expansion.upside_down_portal": "Upside Down Portal",
+  "block.dimension_expansion.upside_down_portal_frame_acacia": "Upside Down Portal Frame Acacia",
+  "block.dimension_expansion.upside_down_portal_frame_birch": "Upside Down Portal Frame Birch",
+  "block.dimension_expansion.upside_down_portal_frame_cherry": "Upside Down Portal Frame Cherry",
+  "block.dimension_expansion.upside_down_portal_frame_dark_oak": "Upside Down Portal Frame Dark Oak",
+  "block.dimension_expansion.upside_down_portal_frame_jungle": "Upside Down Portal Frame Jungle",
+  "block.dimension_expansion.upside_down_portal_frame_mangrove": "Upside Down Portal Frame Mangrove",
+  "block.dimension_expansion.upside_down_portal_frame_oak": "Upside Down Portal Frame Oak",
+  "block.dimension_expansion.upside_down_portal_frame_spruce": "Upside Down Portal Frame Spruce",
   "creativetab.dimension_expansion.blocks": "Dimensional Expansion Blocks",
   "death.attack.darkness": "The Darkness Consumed %1$s",
-  "subtitles.entity.player.darkness": "The Darkness Hurts"
+  "item.dimension_expansion.blood_stone": "Blood Stone",
+  "item.dimension_expansion.ender_cream": "Ender Cream",
+  "item.dimension_expansion.ender_crystal": "Ender Crystal",
+  "item.dimension_expansion.ender_crystal_shard": "Ender Crystal Shard",
+  "item.dimension_expansion.ender_gem": "Ender Gem",
+  "item.dimension_expansion.enderman_heart": "Enderman Heart",
+  "sounds.dimension_expansion.teleporter_activate": "Teleporter Activates",
+  "sounds.dimension_expansion.upside_down_dimension_portal_ambient": "Upside Down Portal Growls",
+  "sounds.dimension_expansion.upside_down_portal_activate": "Upside Down Portal Activates",
+  "subtitles.entity.player.darkness": "The Darkness Hurts",
+  "tooltip.dimension_expansion.blood_stone": "A Crafting Item, and an Upside Down Portal Activator"
 }

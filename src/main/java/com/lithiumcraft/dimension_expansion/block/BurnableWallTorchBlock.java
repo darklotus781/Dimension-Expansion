@@ -33,7 +33,7 @@ public class BurnableWallTorchBlock extends WallTorchBlock {
 
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        if (!level.dimension().equals(DimensionExpansionDimensions.DEEP_BENEATH)) return;
+//        if (!level.dimension().equals(DimensionExpansionDimensions.DEEP_BENEATH)) return;
 
         if (random.nextFloat() < 0.10F) {
             BlockState newState = ModBlocks.BURNED_OUT_WALL_TORCH.get()

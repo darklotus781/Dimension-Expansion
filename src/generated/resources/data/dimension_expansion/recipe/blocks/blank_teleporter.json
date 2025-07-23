@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "C": {
+      "item": "minecraft:calibrated_sculk_sensor"
+    },
+    "D": {
+      "item": "minecraft:chiseled_deepslate"
+    },
+    "H": {
+      "item": "minecraft:sculk_shrieker"
+    },
+    "N": {
+      "item": "minecraft:netherite_pickaxe"
+    },
+    "S": {
+      "item": "minecraft:sculk_catalyst"
+    }
+  },
+  "pattern": [
+    "DCD",
+    "SNH",
+    "DCD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "dimension_expansion:blank_teleporter"
+  }
+}

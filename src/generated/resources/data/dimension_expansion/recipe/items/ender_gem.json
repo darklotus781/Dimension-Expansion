@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "dimension_expansion:blood_stone"
+    },
+    "C": {
+      "item": "dimension_expansion:ender_crystal"
+    }
+  },
+  "pattern": [
+    "CCC",
+    "CBC",
+    "CCC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "dimension_expansion:ender_gem"
+  }
+}

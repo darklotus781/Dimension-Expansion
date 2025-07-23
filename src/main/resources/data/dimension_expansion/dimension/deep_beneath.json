@@ -4,7 +4,7 @@
     "type": "minecraft:noise",
     "biome_source": {
       "type": "minecraft:fixed",
-      "biome": "dimension_expansion:abandoned_mines"
+      "biome": "dimension_expansion:deep_beneath/abandoned_mines"
     },
     "settings": "dimension_expansion:deep_beneath"
   }

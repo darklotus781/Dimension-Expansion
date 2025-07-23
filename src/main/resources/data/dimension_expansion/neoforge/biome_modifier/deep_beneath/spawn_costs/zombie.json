@@ -1,0 +1,9 @@
+{
+  "type": "neoforge:add_spawn_costs",
+  "biomes": "#dimension_expansion:deep_beneath_biomes",
+  "entity_types": "minecraft:zombie",
+  "spawn_cost": {
+    "energy_budget": 1.0,
+    "charge": 0.02
+  }
+}

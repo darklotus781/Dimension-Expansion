@@ -1,0 +1,5 @@
+{
+  "type": "neoforge:remove_features",
+  "biomes": "#dimension_expansion:upside_down_biomes",
+  "features": "#minecraft:has_structure"
+}

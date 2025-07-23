@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "minecraft:diamond_ore"
+  },
+  "base": {
+    "item": "dimension_expansion:blank_teleporter"
+  },
+  "result": {
+    "count": 1,
+    "id": "dimension_expansion:mining_teleporter"
+  },
+  "template": {
+    "item": "dimension_expansion:ender_gem"
+  }
+}

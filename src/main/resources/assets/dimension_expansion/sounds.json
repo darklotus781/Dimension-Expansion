@@ -1,0 +1,53 @@
+{
+  "teleporter_activate": {
+    "subtitles": "sounds.dimension_expansion.teleporter_activate",
+    "sounds": [
+      "dimension_expansion:teleporter_activate"
+    ]
+  },
+  "upside_down_dimension_portal_activate": {
+    "subtitles": "sounds.dimension_expansion.upside_down_dimension_portal_activate",
+    "sounds": [
+      "dimension_expansion:upside_down_dimension_portal_activate"
+    ]
+  },
+  "upside_down_dimension_portal_ambient": {
+    "subtitles": "sounds.dimension_expansion.upside_down_dimension_portal_ambient",
+    "sounds": [
+      "dimension_expansion:upside_down_dimension_portal_ambient_1",
+      "dimension_expansion:upside_down_dimension_portal_ambient_2"
+    ]
+  },
+  "ambient.upside_down.mood": {
+    "sounds": [
+      "dimension_expansion:ambient/upside_down/upside_down/mood_1",
+      "dimension_expansion:ambient/upside_down/upside_down/mood_2"
+    ]
+  },
+  "ambient.upside_down.additions": {
+    "sounds": [
+      {
+        "name": "dimension_expansion:ambient/upside_down/upside_down/addition_1",
+        "volume": 0.55,
+        "weight": 10
+      },
+      {
+        "name": "dimension_expansion:ambient/upside_down/upside_down/addition_2",
+        "volume": 0.55,
+        "weight": 10
+      }
+    ]
+  },
+  "music.upside_down.upside_down": {
+    "sounds": [
+      {
+        "name": "dimension_expansion:music/scary_night",
+        "stream": true
+      },
+      {
+        "name": "dimension_expansion:music/whispered_shadows",
+        "stream": true
+      }
+    ]
+  }
+}

@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 
 public class OverworldReturnTeleporterBlock extends AbstractTeleporterBlock {
     public OverworldReturnTeleporterBlock() {
-        super(BlockBehaviour.Properties.ofFullCopy(Blocks.BEDROCK).noLootTable().lightLevel(s -> 15));
+        super(BlockBehaviour.Properties.ofFullCopy(Blocks.BEDROCK).lightLevel(s -> 15));
     }
 
     @Nullable

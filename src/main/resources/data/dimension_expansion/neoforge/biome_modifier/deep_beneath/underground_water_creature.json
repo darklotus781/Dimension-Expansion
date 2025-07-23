@@ -1,0 +1,13 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": "#dimension_expansion:deep_beneath_biomes",
+  "spawners": [
+    {
+      "type": "minecraft:glow_squid",
+      "maxCount": 6,
+      "minCount": 4,
+      "weight": 10
+    }
+  ]
+}
+

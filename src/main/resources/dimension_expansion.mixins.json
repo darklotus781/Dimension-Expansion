@@ -6,7 +6,9 @@
   "mixins": [
     "CreateWorldScreenMixin",
     "PrimaryLevelDataMixinNeo",
-    "WorldOpenFlowsMixin"
+    "WorldOpenFlowsMixin",
+    "FogRendererMixin",
+    "SpawnStateMixin"
   ],
   "client": [
   ],

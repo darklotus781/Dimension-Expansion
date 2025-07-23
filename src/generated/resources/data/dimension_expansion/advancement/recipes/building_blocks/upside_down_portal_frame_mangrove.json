@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_mangrove": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:mangrove_wood"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "dimension_expansion:upside_down_portal_frame_mangrove"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_mangrove"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "dimension_expansion:upside_down_portal_frame_mangrove"
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "dimension_expansion:ender_crystal_shard"
+    },
+    {
+      "item": "dimension_expansion:ender_crystal_shard"
+    },
+    {
+      "item": "dimension_expansion:ender_crystal_shard"
+    },
+    {
+      "item": "dimension_expansion:ender_crystal_shard"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "dimension_expansion:ender_crystal"
+  }
+}

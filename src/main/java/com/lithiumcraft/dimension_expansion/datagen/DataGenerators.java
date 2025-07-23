@@ -29,7 +29,7 @@ public class DataGenerators {
         if (event.includeClient()) {
 //            generator.addProvider(true, new ModBlockModelProvider(packOutput, existingFileHelper));
             generator.addProvider(true, new ModBlockStateProvider(packOutput, existingFileHelper));
-//            generator.addProvider(true, new ModItemModelProvider(packOutput, existingFileHelper));
+            generator.addProvider(true, new ModItemModelProvider(packOutput, existingFileHelper));
             generator.addProvider(true, new ModLangProvider(packOutput));
         }
 
@@ -37,8 +37,8 @@ public class DataGenerators {
         if (event.includeServer()) {
             generator.addProvider(true, new ModDamageTypeProvider(packOutput));
 //
-//            generator.addProvider(true, new ModGlobalLootModifierProvider(packOutput, lookupProvider));
-            generator.addProvider(true, new LootTableProvider(packOutput, Collections.emptySet(),
+            generator.addProvider(true, new ModGlobalLootModifierProvider(packOutput, lookupProvider));
+            generator.addProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),
                     List.of(new LootTableProvider.SubProviderEntry(ModBlockLootTableProvider::new, LootContextParamSets.BLOCK)), lookupProvider));
             generator.addProvider(true, new ModRecipeProvider(packOutput, lookupProvider));
 //

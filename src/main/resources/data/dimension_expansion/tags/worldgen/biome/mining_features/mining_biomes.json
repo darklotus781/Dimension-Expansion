@@ -1,8 +1,8 @@
 {
   "replace": false,
   "values": [
-    "dimension_expansion:abandoned_mines",
-    "dimension_expansion:mining",
-    "dimension_expansion:stone_block"
+    "dimension_expansion:deep_beneath/abandoned_mines",
+    "dimension_expansion:mining/mining",
+    "dimension_expansion:stone_block/stone_block"
   ]
 }

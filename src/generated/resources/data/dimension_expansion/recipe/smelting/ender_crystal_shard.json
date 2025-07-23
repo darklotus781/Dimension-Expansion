@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "dimension_expansion:ender_cream"
+  },
+  "result": {
+    "count": 1,
+    "id": "dimension_expansion:ender_crystal_shard"
+  }
+}

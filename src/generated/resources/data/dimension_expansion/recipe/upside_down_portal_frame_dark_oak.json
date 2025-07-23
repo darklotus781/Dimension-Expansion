@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "dimension_expansion:blood_stone"
+    },
+    "X": {
+      "item": "minecraft:dark_oak_wood"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "X#X",
+    "XXX"
+  ],
+  "result": {
+    "count": 14,
+    "id": "dimension_expansion:upside_down_portal_frame_dark_oak"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "dimension_expansion:block/blank_teleporter"
+    }
+  }
+}

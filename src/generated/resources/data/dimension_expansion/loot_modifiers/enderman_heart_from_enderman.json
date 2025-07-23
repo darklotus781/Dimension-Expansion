@@ -1,0 +1,14 @@
+{
+  "type": "dimension_expansion:add_item",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:entities/enderman"
+    },
+    {
+      "chance": 0.25,
+      "condition": "minecraft:random_chance"
+    }
+  ],
+  "item": "dimension_expansion:enderman_heart"
+}

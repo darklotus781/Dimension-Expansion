@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_enderman_heart": {
+      "conditions": {
+        "items": [
+          {
+            "items": "dimension_expansion:enderman_heart"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "dimension_expansion:items/blood_stone"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_enderman_heart"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "dimension_expansion:items/blood_stone"
+    ]
+  }
+}

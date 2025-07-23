@@ -28,8 +28,8 @@ public abstract class BlockItemMixin {
         Level level = context.getLevel();
         if (!(level instanceof ServerLevel serverLevel)) return;
 
-        // Only block in the Deep Beneath dimension
-        if (!serverLevel.dimension().equals(DimensionExpansionDimensions.DEEP_BENEATH)) return;
+        // Only block in the Deep Beneath and Upside Down dimension
+        if (!serverLevel.dimension().equals(DimensionExpansionDimensions.DEEP_BENEATH) && !level.dimension().equals(DimensionExpansionDimensions.UPSIDE_DOWN)) return;
 
         // Cancel torch placement
         cir.setReturnValue(InteractionResult.FAIL);

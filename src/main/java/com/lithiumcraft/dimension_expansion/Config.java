@@ -14,6 +14,11 @@ public class Config
 {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
+//    private static final ModConfigSpec.IntValue PORTAL_COLOR = BUILDER
+//            .comment("Hex RGB color for portal tint (default: green)")
+//            .defineInRange("portal_color", 0x00AA44, 0x000000, 0xFFFFFF);
+//    .defineInRange("portal_color", 0x880808, 0x000000, 0xFFFFFF);
+
 //    private static final ModConfigSpec.BooleanValue LOG_DIRT_BLOCK = BUILDER
 //            .comment("Whether to log the dirt block on common setup")
 //            .define("logDirtBlock", true);
@@ -34,7 +39,7 @@ public class Config
     static final ModConfigSpec SPEC = BUILDER.build();
 
 //    public static boolean logDirtBlock;
-//    public static int magicNumber;
+//    public static int portal_color;
 //    public static String magicNumberIntroduction;
 //    public static Set<Item> items;
 
@@ -47,7 +52,7 @@ public class Config
     static void onLoad(final ModConfigEvent event)
     {
 //        logDirtBlock = LOG_DIRT_BLOCK.get();
-//        magicNumber = MAGIC_NUMBER.get();
+//        portal_color = PORTAL_COLOR.get();
 //        magicNumberIntroduction = MAGIC_NUMBER_INTRODUCTION.get();
 //
 //        // convert the list of strings into a set of items
