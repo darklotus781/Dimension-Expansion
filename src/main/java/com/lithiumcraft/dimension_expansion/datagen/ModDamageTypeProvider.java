@@ -1,5 +1,6 @@
 package com.lithiumcraft.dimension_expansion.datagen;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.lithiumcraft.dimension_expansion.DimensionExpansion;
 import net.minecraft.data.CachedOutput;
@@ -23,14 +24,17 @@ public class ModDamageTypeProvider implements DataProvider {
         JsonObject json = new JsonObject();
         json.addProperty("message_id", "darkness");
         json.addProperty("scaling", DamageScaling.NEVER.getSerializedName());
-        json.addProperty("exhaustion", 0.1F);
+        json.addProperty("exhaustion", 0.1F); // hunger penalty
+        json.addProperty("bypasses_armor", true); // Ignores armor
+        json.addProperty("damage_source_type", "generic"); // No magic/fire/etc.
 
         ResourceLocation id = ResourceLocation.fromNamespaceAndPath(DimensionExpansion.MOD_ID, "darkness");
         Path path = output.getOutputFolder()
-            .resolve("data/dimension_expansion/damage_type/" + id.getPath() + ".json");
+                .resolve("data/" + id.getNamespace() + "/damage_type/" + id.getPath() + ".json");
 
         return DataProvider.saveStable(cache, json, path);
     }
+
 
     @Override
     public String getName() {

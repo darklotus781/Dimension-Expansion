@@ -9,6 +9,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
+import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
@@ -23,7 +24,7 @@ public class DataGenerators {
         DataGenerator generator = event.getGenerator();
         PackOutput packOutput = generator.getPackOutput();
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
-        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+//        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
 // Client-side providers
         if (event.includeClient()) {
@@ -35,7 +36,11 @@ public class DataGenerators {
 
 // Server-side providers
         if (event.includeServer()) {
-            generator.addProvider(true, new ModDamageTypeProvider(packOutput));
+            DatapackBuiltinEntriesProvider datapackProvider = new ModRegistriesProvider(packOutput, event.getLookupProvider());
+            CompletableFuture<HolderLookup.Provider> lookupProvider = datapackProvider.getRegistryProvider();
+            generator.addProvider(true, datapackProvider);
+
+//            generator.addProvider(true, new ModDamageTypeProvider(packOutput));
 //
             generator.addProvider(true, new ModGlobalLootModifierProvider(packOutput, lookupProvider));
             generator.addProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),
@@ -44,6 +49,8 @@ public class DataGenerators {
 //
             BlockTagsProvider blockTagsProvider = new ModBlockTagProvider(packOutput, lookupProvider, existingFileHelper);
             generator.addProvider(true, blockTagsProvider);
+            ModDamageTypeTagProvider modDamageTypeTagsProvider = new ModDamageTypeTagProvider(packOutput, lookupProvider, existingFileHelper);
+            generator.addProvider(true, modDamageTypeTagsProvider);
 //            generator.addProvider(true, new ModItemTagProvider(packOutput, lookupProvider, blockTagsProvider.contentsGetter(), existingFileHelper));
         }
     }

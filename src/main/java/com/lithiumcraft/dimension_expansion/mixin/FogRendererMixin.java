@@ -27,8 +27,8 @@ public abstract class FogRendererMixin {
 
 //         Only apply in Upside Down dimension
         if (level.dimension().location().equals(DimensionExpansionDimensions.UPSIDE_DOWN.location()) || level.dimension().location().equals(DimensionExpansionDimensions.DEEP_BENEATH.location())) {
-            RenderSystem.setShaderFogStart(8.0F);
-            RenderSystem.setShaderFogEnd(16.0F);
+            RenderSystem.setShaderFogStart(16.0F);
+            RenderSystem.setShaderFogEnd(32);
             RenderSystem.setShaderFogShape(FogShape.SPHERE);
 
             ci.cancel(); // prevent vanilla from setting it back

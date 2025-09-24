@@ -7,10 +7,15 @@ import com.lithiumcraft.dimension_expansion.particle.ModParticles;
 import com.lithiumcraft.dimension_expansion.particle.client.UpsideDownPortalHangParticleProvider;
 import com.lithiumcraft.dimension_expansion.particle.client.UpsideDownPortalLandParticleProvider;
 import com.lithiumcraft.dimension_expansion.particle.client.UpsideDownPortalDripParticleProvider;
+import com.lithiumcraft.dimension_expansion.registry.ModEffects;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.api.distmarker.Dist;
@@ -19,6 +24,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 
@@ -26,6 +32,9 @@ import java.util.stream.Stream;
 
 @EventBusSubscriber(modid = DimensionExpansion.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientEvents {
+    private static final ResourceLocation VIGNETTE =
+            ResourceLocation.fromNamespaceAndPath("minecraft", "textures/misc/vignette.png");
+
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {

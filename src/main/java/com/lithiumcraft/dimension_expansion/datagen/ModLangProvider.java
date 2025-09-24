@@ -31,7 +31,6 @@ public class ModLangProvider extends LanguageProvider {
         for (WoodType woodType : WoodType.values()) {
             String name = "upside_down_portal_frame_" + woodType.name().toLowerCase(Locale.ROOT);
             add("block.dimension_expansion." + name, this.formatDisplayName(name));
-
         }
         add("item.dimension_expansion.ender_gem","Ender Gem");
         add("item.dimension_expansion.ender_cream","Ender Cream");
@@ -43,6 +42,10 @@ public class ModLangProvider extends LanguageProvider {
         add("sounds.dimension_expansion.teleporter_activate", "Teleporter Activates");
         add("sounds.dimension_expansion.upside_down_portal_activate", "Upside Down Portal Activates");
         add("sounds.dimension_expansion.upside_down_dimension_portal_ambient", "Upside Down Portal Growls");
+        add("effect.dimension_expansion.nightwalker", "The darkness hurts!");
+        add("effect.dimension_expansion.nightwalker.description", "In the dark, you may stub your toe and take damage.");
+        add("message.dimension_expansion.nightwalker_warning", "Danger waits for you in the darkness!");
+        add("message.dimension_expansion.light_blocked", "That light source doesn't work down here.");
     }
 
     // Optional helper

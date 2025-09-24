@@ -1,6 +1,7 @@
 package com.lithiumcraft.dimension_expansion.blockentity;
 
 import com.lithiumcraft.dimension_expansion.block.ModBlocks;
+import com.lithiumcraft.dimension_expansion.registry.ModSounds;
 import com.lithiumcraft.dimension_expansion.structure.StructureBuilder;
 import com.lithiumcraft.dimension_expansion.util.teleport.TeleportMarkerData;
 import com.lithiumcraft.dimension_expansion.util.teleport.TeleportUtil;
@@ -16,6 +17,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -85,6 +87,7 @@ public class TeleporterBlockEntity extends BlockEntity implements INBTSerializab
                     player.getYRot(),
                     player.getXRot()
             );
+            targetLevel.playSound(null, targetPos, ModSounds.TELEPORTER_ACTIVATE.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
             return;
         }
 
@@ -154,6 +157,7 @@ public class TeleporterBlockEntity extends BlockEntity implements INBTSerializab
                 player.getYRot(),
                 player.getXRot()
         );
+        targetLevel.playSound(null, arrival, ModSounds.TELEPORTER_ACTIVATE.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
     }
 
     private Optional<TeleporterBlockEntity> findLinkedTeleporterNearby(ServerLevel level, BlockPos center, Block returnTeleporterBlock, int radius) {
@@ -171,7 +175,7 @@ public class TeleporterBlockEntity extends BlockEntity implements INBTSerializab
             ModBlocks.DEEP_BENEATH_TELEPORTER.get(), new TeleporterRules(
                     DimensionExpansionDimensions.DEEP_BENEATH,
                     true,
-                    (level, base) -> new BlockPos(base.getX(), 256, base.getZ()),
+                    (level, base) -> new BlockPos(base.getX(), 128, base.getZ()),
                     StructureBuilder::buildDeepBeneathPlatform
             ),
 

@@ -6,8 +6,10 @@ import com.lithiumcraft.dimension_expansion.datagen.loot.ModLootModifiers;
 import com.lithiumcraft.dimension_expansion.item.ModCreativeModeTabs;
 import com.lithiumcraft.dimension_expansion.item.ModItems;
 import com.lithiumcraft.dimension_expansion.particle.ModParticles;
+import com.lithiumcraft.dimension_expansion.registry.ModEffects;
 import com.lithiumcraft.dimension_expansion.registry.ModSounds;
 import com.mojang.logging.LogUtils;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -23,7 +25,7 @@ public class DimensionExpansion
     public static final Logger LOGGER = LogUtils.getLogger();
     public static final Integer PORTAL_COLOR = 8912904;
 
-    public DimensionExpansion(IEventBus modEventBus, ModContainer modContainer)
+    public DimensionExpansion(IEventBus modEventBus, Dist dist, ModContainer modContainer)
     {
         ModBlocks.register(modEventBus);
         ModBlockEntities.register(modEventBus);
@@ -31,6 +33,7 @@ public class DimensionExpansion
         ModItems.register(modEventBus);
         ModParticles.register(modEventBus);
         ModSounds.register(modEventBus);
+        ModEffects.register(modEventBus);
 
         ModLootModifiers.register(modEventBus);
 

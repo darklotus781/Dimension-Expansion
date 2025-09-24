@@ -49,5 +49,16 @@
         "stream": true
       }
     ]
+  },
+  "nightwalker_damage": {
+    "subtitle": "effect.dimension_expansion.nightwalker",
+    "sounds": [
+      {
+        "name": "minecraft:entity.hostile.hurt",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 1.0
+      }
+    ]
   }
 }

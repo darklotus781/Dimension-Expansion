@@ -16,7 +16,7 @@ public class UpsideDownDimension {
         @SubscribeEvent
         public static void registerDimensionSpecialEffects(RegisterDimensionSpecialEffectsEvent event) {
             DimensionSpecialEffects customEffect = new DimensionSpecialEffects(
-                    64.0F, // fog distance (in chunks)
+                    32.0F, // fog distance (in chunks)
                     false, // no ground for light calculation
                     DimensionSpecialEffects.SkyType.NONE,
                     false, // do not force bright lightmap
@@ -35,8 +35,8 @@ public class UpsideDownDimension {
                 @Override
                 public boolean isFoggyAt(int x, int y) {
 //                    return false;
-                    return y < 48 || y > 160; // fog only near bedrock or ceiling
-//                    return true; // Always foggy, everywhere
+//                    return y < 48 || y > 160; // fog only near bedrock or ceiling
+                    return true; // Always foggy, everywhere
                 }
 
                 @Override

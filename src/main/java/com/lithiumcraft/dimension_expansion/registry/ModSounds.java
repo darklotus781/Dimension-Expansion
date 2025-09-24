@@ -19,6 +19,8 @@ public class ModSounds {
     public static final Supplier<SoundEvent> UPSIDE_DOWN_MOOD = registerSoundEvent("ambient.upside_down.mood");
     public static final Supplier<SoundEvent> UPSIDE_DOWN_ADDITIONS = registerSoundEvent("ambient.upside_down.additions");
     public static final Supplier<SoundEvent> UPSIDE_DOWN_MUSIC = registerSoundEvent("music.upside_down.upside_down");
+    public static final Supplier<SoundEvent> NIGHTWALKER_DAMAGE = registerSoundEvent("nightwalker_damage");
+
 
     private static Supplier<SoundEvent> registerSoundEvent(String name) {
         ResourceLocation id = ResourceLocation.fromNamespaceAndPath(DimensionExpansion.MOD_ID, name);
