@@ -117,6 +117,7 @@ dependencies {
     implementation "curse.maven:cucumber-272335:6481512"
 //    implementation "curse.maven:create-328085:6323264"
     implementation "curse.maven:worldedit-225608:5830452"
+    implementation "curse.maven:reliquary-reincarnations-241319:7010155"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

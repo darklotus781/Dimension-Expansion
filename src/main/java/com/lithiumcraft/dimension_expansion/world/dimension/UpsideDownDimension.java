@@ -16,7 +16,7 @@ public class UpsideDownDimension {
         @SubscribeEvent
         public static void registerDimensionSpecialEffects(RegisterDimensionSpecialEffectsEvent event) {
             DimensionSpecialEffects customEffect = new DimensionSpecialEffects(
-                    8.0F, // fog distance (in chunks)
+                    64.0F, // fog distance (in chunks)
                     false, // no ground for light calculation
                     DimensionSpecialEffects.SkyType.NONE,
                     false, // do not force bright lightmap
@@ -25,13 +25,18 @@ public class UpsideDownDimension {
 
                 @Override
                 public Vec3 getBrightnessDependentFogColor(Vec3 color, float sunHeight) {
-                    return new Vec3(0.3, 0.05, 0.05); // intense red fog
+//                    return new Vec3(0.3, 0.05, 0.05); // intense red fog
+//                    return new Vec3(0.4, 0.2, 0.2); // lighter red fog
+                    return new Vec3(0.16, 0.04, 0.04); // upside down
+//                    return new Vec3(0.14, 0.04, 0.04); // Dull Nether
 //                    return new Vec3(0.05, 0.01, 0.01); // deep near-black reddish fog
                 }
 
                 @Override
                 public boolean isFoggyAt(int x, int y) {
-                    return true; // Always foggy, everywhere
+//                    return false;
+                    return y < 48 || y > 160; // fog only near bedrock or ceiling
+//                    return true; // Always foggy, everywhere
                 }
 
                 @Override

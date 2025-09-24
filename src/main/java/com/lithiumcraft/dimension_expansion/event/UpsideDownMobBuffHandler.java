@@ -4,6 +4,7 @@ import com.lithiumcraft.dimension_expansion.DimensionExpansion;
 import com.lithiumcraft.dimension_expansion.worldgen.DimensionExpansionDimensions;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.*;
@@ -31,18 +32,23 @@ public class UpsideDownMobBuffHandler {
 
         if (!(entity instanceof Mob mob) || level.isClientSide()) return;
 
-        // Only apply in upside_down or deep_beneath
+// Only apply in upside_down or deep_beneath
         ResourceKey<Level> dim = level.dimension();
         if (!dim.equals(DimensionExpansionDimensions.UPSIDE_DOWN)) return;
 
-        // Only apply to monsters (not villagers, golems, etc.)
+// Only apply to monsters
         if (mob.getType().getCategory() != MobCategory.MONSTER) return;
 
-        // Double max health (once)
+// Use persistent data to avoid reapplying buffs
+        CompoundTag tag = mob.getPersistentData();
+        if (tag.getBoolean("dimension_expansion.buff_applied")) return;
+        tag.putBoolean("dimension_expansion.buff_applied", true);
+
+// Double max health
         AttributeInstance healthAttr = mob.getAttribute(Attributes.MAX_HEALTH);
-        if (healthAttr != null && healthAttr.getBaseValue() < 2048.0D) {
+        if (healthAttr != null) {
             double original = healthAttr.getBaseValue();
-            healthAttr.setBaseValue(original * 1.5);
+            healthAttr.setBaseValue(original * 2);
             mob.setHealth((float) healthAttr.getValue());
         }
 
