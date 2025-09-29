@@ -1,11 +1,21 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_enderman_heart": {
+    "has_ender_eye": {
       "conditions": {
         "items": [
           {
-            "items": "dimension_expansion:enderman_heart"
+            "items": "minecraft:ender_eye"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_magma_cream": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:magma_cream"
           }
         ]
       },
@@ -31,8 +41,9 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_enderman_heart",
-      "has_slime_ball"
+      "has_ender_eye",
+      "has_slime_ball",
+      "has_magma_cream"
     ]
   ],
   "rewards": {

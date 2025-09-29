@@ -2,16 +2,16 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "dimension_expansion:blood_stone"
-    },
     "C": {
       "item": "dimension_expansion:ender_crystal"
+    },
+    "E": {
+      "item": "minecraft:emerald_block"
     }
   },
   "pattern": [
     "CCC",
-    "CBC",
+    "CEC",
     "CCC"
   ],
   "result": {

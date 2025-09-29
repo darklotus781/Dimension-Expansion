@@ -3,10 +3,13 @@
   "category": "misc",
   "ingredients": [
     {
-      "item": "dimension_expansion:enderman_heart"
+      "item": "minecraft:ender_eye"
     },
     {
       "item": "minecraft:slime_ball"
+    },
+    {
+      "item": "minecraft:magma_cream"
     }
   ],
   "result": {

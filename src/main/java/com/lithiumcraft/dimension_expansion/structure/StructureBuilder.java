@@ -10,7 +10,7 @@ public class StructureBuilder {
 
     public static void buildDeepBeneathPlatform(ServerLevel level, BlockPos center) {
         BlockState cobble = Blocks.COBBLESTONE.defaultBlockState();
-        BlockState torch = ModBlocks.BURNABLE_TORCH.get().defaultBlockState();
+//        BlockState torch = ModBlocks.BURNABLE_TORCH.get().defaultBlockState();
         BlockState teleporter = ModBlocks.OVERWORLD_RETURN_TELEPORTER.get().defaultBlockState();
 
         // Clear space: 5x5 area, 4 blocks high (Y to Y+3)
@@ -19,9 +19,7 @@ public class StructureBuilder {
                 for (int dy = 0; dy <= 3; dy++) {
                     BlockPos target = center.offset(dx, dy, dz);
                     BlockState state = level.getBlockState(target);
-//                    if (state.is(BlockTags.OVERWORLD_CARVER_REPLACEABLES)) {
                         level.setBlockAndUpdate(target, Blocks.AIR.defaultBlockState());
-//                    }
                 }
             }
         }
@@ -35,10 +33,10 @@ public class StructureBuilder {
         }
 
         // Torch corners (Y + 1)
-        level.setBlockAndUpdate(center.offset(-2, 1, -2), torch);
-        level.setBlockAndUpdate(center.offset( 2, 1, -2), torch);
-        level.setBlockAndUpdate(center.offset(-2, 1,  2), torch);
-        level.setBlockAndUpdate(center.offset( 2, 1,  2), torch);
+//        level.setBlockAndUpdate(center.offset(-2, 1, -2), torch);
+//        level.setBlockAndUpdate(center.offset( 2, 1, -2), torch);
+//        level.setBlockAndUpdate(center.offset(-2, 1,  2), torch);
+//        level.setBlockAndUpdate(center.offset( 2, 1,  2), torch);
 
         // Teleporter block (Y + 1)
         level.setBlockAndUpdate(center.above(), teleporter);
@@ -54,9 +52,7 @@ public class StructureBuilder {
                 for (int dy = 0; dy <= 3; dy++) {
                     BlockPos target = center.offset(dx, dy, dz);
                     BlockState state = level.getBlockState(target);
-//                    if (state.is(BlockTags.OVERWORLD_CARVER_REPLACEABLES)) {
                     level.setBlockAndUpdate(target, Blocks.AIR.defaultBlockState());
-//                    }
                 }
             }
         }

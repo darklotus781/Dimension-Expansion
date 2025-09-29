@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.Random;
 
-@EventBusSubscriber(modid = DimensionExpansion.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = DimensionExpansion.MOD_ID)
 public class DeepBeneathDarknessDamageHandler {
 
     @SubscribeEvent

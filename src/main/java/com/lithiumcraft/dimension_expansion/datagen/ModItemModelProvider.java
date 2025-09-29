@@ -21,8 +21,6 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(ModItems.ENDER_CREAM);
         simpleItem(ModItems.ENDER_CRYSTAL_SHARD);
         simpleItem(ModItems.ENDER_CRYSTAL);
-        simpleItem(ModItems.ENDERMAN_HEART);
-        simpleItem(ModItems.BLOOD_STONE);
 
     }
 

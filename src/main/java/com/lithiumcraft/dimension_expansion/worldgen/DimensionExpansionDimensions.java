@@ -19,10 +19,6 @@ public class DimensionExpansionDimensions {
             Registries.DIMENSION,
             ResourceLocation.fromNamespaceAndPath(DimensionExpansion.MOD_ID, "stone_block")
     );
-    public static final ResourceKey<Level> UPSIDE_DOWN = ResourceKey.create(
-            Registries.DIMENSION,
-            ResourceLocation.fromNamespaceAndPath(DimensionExpansion.MOD_ID, "upside_down")
-    );
 }
 
 

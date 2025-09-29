@@ -13,12 +13,7 @@ public class ModSounds {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS =
             DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, DimensionExpansion.MOD_ID);
 
-    public static final Supplier<SoundEvent> UPSIDE_DOWN_DIMENSION_PORTAL_ACTIVATE = registerSoundEvent("upside_down_dimension_portal_activate");
-    public static final Supplier<SoundEvent> UPSIDE_DOWN_DIMENSION_PORTAL_AMBIENT = registerSoundEvent("upside_down_dimension_portal_ambient");
     public static final Supplier<SoundEvent> TELEPORTER_ACTIVATE = registerSoundEvent("teleporter_activate");
-    public static final Supplier<SoundEvent> UPSIDE_DOWN_MOOD = registerSoundEvent("ambient.upside_down.mood");
-    public static final Supplier<SoundEvent> UPSIDE_DOWN_ADDITIONS = registerSoundEvent("ambient.upside_down.additions");
-    public static final Supplier<SoundEvent> UPSIDE_DOWN_MUSIC = registerSoundEvent("music.upside_down.upside_down");
     public static final Supplier<SoundEvent> NIGHTWALKER_DAMAGE = registerSoundEvent("nightwalker_damage");
 
 

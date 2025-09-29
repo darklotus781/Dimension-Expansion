@@ -1,0 +1,36 @@
+{
+  "type": "min",
+  "argument1": 0.25,
+  "argument2": {
+    "type": "max",
+    "argument1": -0.1,
+    "argument2": {
+      "type": "interpolated",
+      "argument": {
+        "type": "max",
+        "argument1": -1.5,
+        "argument2": {
+          "type": "minecraft:add",
+          "argument1": "dimension_expansion:floor_final",
+          "argument2": {
+            "type": "minecraft:add",
+            "argument1": "dimension_expansion:ceiling_final",
+            "argument2": {
+              "type": "minecraft:add",
+              "argument1": "dimension_expansion:coast",
+              "argument2": {
+                "type": "minecraft:add",
+                "argument1": -0.25,
+                "argument2": {
+                  "type": "max",
+                  "argument1": "dimension_expansion:ceiling",
+                  "argument2": "dimension_expansion:floor"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

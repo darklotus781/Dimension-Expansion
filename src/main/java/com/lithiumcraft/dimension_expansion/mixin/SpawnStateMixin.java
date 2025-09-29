@@ -22,10 +22,7 @@ public class SpawnStateMixin {
         // This method is injected at every getMaxInstancesPerChunk() call
         ServerLevel level = getServerLevelFromThread(); // See below workaround
 
-        if (level != null && (level.dimension().equals(DimensionExpansionDimensions.UPSIDE_DOWN)
-                || level.dimension().equals(DimensionExpansionDimensions.DEEP_BENEATH))
-                && category == MobCategory.MONSTER) {
-
+        if (level != null && (level.dimension().equals(DimensionExpansionDimensions.DEEP_BENEATH)) && category == MobCategory.MONSTER) {
             return category.getMaxInstancesPerChunk() * 2;
         }
 

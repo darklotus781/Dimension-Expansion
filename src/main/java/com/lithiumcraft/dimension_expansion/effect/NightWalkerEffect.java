@@ -53,11 +53,11 @@ public class NightWalkerEffect extends MobEffect {
         int next = nextDamageTick.getOrDefault(player, -1);
 
         if (next == -1 || currentTick >= next) {
-            // 🔥 Silent damage
+            // Silent damage
             float newHealth = Math.max(player.getHealth() - 1.0F, 1.0F);
             player.setHealth(newHealth);
 
-            // 🔊 Play custom sound (with subtitle)
+            // Play custom sound (with subtitle)
             player.level().playSound(
                     null,
                     player.getX(), player.getY(), player.getZ(),

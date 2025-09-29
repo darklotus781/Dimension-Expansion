@@ -28,15 +28,6 @@ public class ModBlockTagProvider extends BlockTagsProvider {
                 .add(ModBlocks.STONE_BLOCK_TELEPORTER.get())
                 .add(ModBlocks.OVERWORLD_RETURN_TELEPORTER.get());
 
-        for (WoodType woodType : WoodType.values()) {
-            String name = "upside_down_portal_frame_" + woodType.name().toLowerCase(Locale.ROOT);
-            Block block = ModBlocks.getUpsideDownPortalFrame(woodType).get();
-            tag(BlockTags.MINEABLE_WITH_AXE)
-                    .add(block);
-            tag(ModTags.Blocks.UPSIDE_DOWN_PORTAL_FRAME_BLOCKS)
-                    .add(block);
-        }
-
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(ModBlocks.DEEP_BENEATH_TELEPORTER.get());
 

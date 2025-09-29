@@ -15,7 +15,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 
 import java.util.Iterator;
 
-@EventBusSubscriber(modid = DimensionExpansion.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = DimensionExpansion.MOD_ID)
 public class DeepBeneathMobLootHandler {
 
     @SubscribeEvent

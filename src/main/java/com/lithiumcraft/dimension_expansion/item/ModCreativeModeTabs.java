@@ -24,16 +24,10 @@ public class ModCreativeModeTabs {
                         output.accept(ModBlocks.MINING_TELEPORTER);
                         output.accept(ModBlocks.STONE_BLOCK_TELEPORTER);
                         output.accept(ModBlocks.BLANK_TELEPORTER);
-
-                        ModBlocks.UPSIDE_DOWN_PORTAL_FRAMES.values().forEach(holder ->
-                                output.accept(holder.get())
-                        );
                         output.accept(ModItems.ENDER_GEM.get());
-                        output.accept(ModItems.ENDERMAN_HEART.get());
                         output.accept(ModItems.ENDER_CREAM.get());
                         output.accept(ModItems.ENDER_CRYSTAL.get());
                         output.accept(ModItems.ENDER_CRYSTAL_SHARD.get());
-                        output.accept(ModItems.BLOOD_STONE.get());
                     }).build());
 
 

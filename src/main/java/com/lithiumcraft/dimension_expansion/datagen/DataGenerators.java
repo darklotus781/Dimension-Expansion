@@ -42,7 +42,6 @@ public class DataGenerators {
 
 //            generator.addProvider(true, new ModDamageTypeProvider(packOutput));
 //
-            generator.addProvider(true, new ModGlobalLootModifierProvider(packOutput, lookupProvider));
             generator.addProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),
                     List.of(new LootTableProvider.SubProviderEntry(ModBlockLootTableProvider::new, LootContextParamSets.BLOCK)), lookupProvider));
             generator.addProvider(true, new ModRecipeProvider(packOutput, lookupProvider));
