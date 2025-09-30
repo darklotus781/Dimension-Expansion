@@ -42,7 +42,7 @@ public class DimensionExpansion
 
         ModCreativeModeTabs.register(modEventBus);
 
-        DeepBeneathMobSpawnHandler.register();
+        DeepBeneathMobSpawnHandler.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         modEventBus.addListener(Config::onLoad);
