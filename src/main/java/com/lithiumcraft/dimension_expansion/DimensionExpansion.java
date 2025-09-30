@@ -30,7 +30,7 @@ public class DimensionExpansion
     {
         // --- runtime check for Simple Burnout Torch ---
         if (!ModList.get().isLoaded("simple_burnout_torch")) {
-            throw new IllegalStateException("[The Upside Down] requires Simple Burnout Torch to be installed! Please add it to your mods folder.");
+            throw new IllegalStateException("[Dimension Expansion] requires Simple Burnout Torch to be installed! Please add it to your mods folder.");
         }
 
         ModBlocks.register(modEventBus);
@@ -43,7 +43,7 @@ public class DimensionExpansion
 
         ModCreativeModeTabs.register(modEventBus);
 
-        DeepBeneathMobSpawnHandler.register(modEventBus);
+        DeepBeneathMobSpawnHandler.register();
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         modEventBus.addListener(Config::onLoad);

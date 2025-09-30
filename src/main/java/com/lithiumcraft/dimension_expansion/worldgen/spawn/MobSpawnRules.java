@@ -18,56 +18,60 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
+import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
 
 import java.util.Set;
 
 public class MobSpawnRules {
 
-    // Match the same extra creatures you allow in MobSpawnRules
+    // Extra creatures you want alongside monsters
     private static final Set<EntityType<?>> EXTRA_CREATURES = Set.of(
-//            EntityType.POLAR_BEAR,
-//            EntityType.ZOMBIE_HORSE,
-//            EntityType.SKELETON_HORSE
+            EntityType.POLAR_BEAR
     );
 
-    public static <T extends Mob> boolean checkCustomMonsterSpawnRules(
-            EntityType<T> type,
-            LevelAccessor level,
-            MobSpawnType spawnType,
-            BlockPos pos,
-            RandomSource random
-    ) {
-        if (level.getDifficulty() == Difficulty.PEACEFUL) return false;
+    public static void onSpawnPlacementCheck(MobSpawnEvent.SpawnPlacementCheck event) {
+        ServerLevelAccessor level = event.getLevel();
+        EntityType<?> type = event.getEntityType();
+        BlockPos pos = event.getPos();
+        RandomSource random = event.getRandom();
 
-        if (level instanceof ServerLevelAccessor serverLevel) {
-            boolean isDeepBeneath = serverLevel.getLevel().dimension().equals(DimensionExpansionDimensions.DEEP_BENEATH);
+        // Only override in Deep Beneath
+        if (!level.getLevel().dimension().equals(DimensionExpansionDimensions.DEEP_BENEATH)) return;
 
-            // Monsters OR special creatures in the deep beneath
-            if (isDeepBeneath && (type.getCategory() == MobCategory.MONSTER || EXTRA_CREATURES.contains(type))) {
-                // Special-case: slimes ignore slime-chunk rules in the deep beneath
-                if (type == EntityType.SLIME) {
-                    return serverLevel.getBlockState(pos.below())
-                            .isValidSpawn(serverLevel, pos.below(), type);
-                }
-
-                // Minimal restriction: must have a valid spawn surface below
-                if (Config.debugEnabled) {
-                    DimensionExpansion.LOGGER.debug("Spawn in DEEP_BENEATH: {} at {} light {}",
-                            type.getDescriptionId(), pos, serverLevel.getBrightness(LightLayer.BLOCK, pos));
-                }
-                return serverLevel.getBlockState(pos.below()).isValidSpawn(serverLevel, pos.below(), type);
-            }
-
-            // Fallback: vanilla behavior
-            if (Config.debugEnabled) {
-                int blockLight = serverLevel.getBrightness(LightLayer.BLOCK, pos);
-                DimensionExpansion.LOGGER.debug("Vanilla spawn: {} at {} blockLight={} skyLight={} type={}",
-                        type.getDescriptionId(), pos, blockLight,
-                        serverLevel.getBrightness(LightLayer.SKY, pos), spawnType);
-            }
-            return Mob.checkMobSpawnRules(type, serverLevel, spawnType, pos, random);
+        if (level.getDifficulty() == Difficulty.PEACEFUL) {
+            event.setResult(MobSpawnEvent.SpawnPlacementCheck.Result.FAIL);
+            return;
         }
 
-        return false;
+        // Monsters OR whitelisted creatures
+        if (type.getCategory() == MobCategory.MONSTER || EXTRA_CREATURES.contains(type)) {
+            // Slimes: ignore slime chunks
+            if (type == EntityType.SLIME) {
+                if (level.getBlockState(pos.below()).isValidSpawn(level, pos.below(), type)) {
+                    logDebug("Deep Beneath slime spawn", type, pos, level);
+                    event.setResult(MobSpawnEvent.SpawnPlacementCheck.Result.SUCCEED);
+                } else {
+                    event.setResult(MobSpawnEvent.SpawnPlacementCheck.Result.FAIL);
+                }
+                return;
+            }
+
+            // All others: ignore light, require only a valid surface
+            if (level.getBlockState(pos.below()).isValidSpawn(level, pos.below(), type)) {
+                logDebug("Deep Beneath spawn", type, pos, level);
+                event.setResult(MobSpawnEvent.SpawnPlacementCheck.Result.SUCCEED);
+            } else {
+                event.setResult(MobSpawnEvent.SpawnPlacementCheck.Result.FAIL);
+            }
+        }
+    }
+
+    private static void logDebug(String prefix, EntityType<?> type, BlockPos pos, ServerLevelAccessor level) {
+        if (Config.debugEnabled) {
+            DimensionExpansion.LOGGER.debug("{}: {} at {} blockLight={} skyLight={}",
+                    prefix, type.getDescriptionId(), pos,
+                    level.getBrightness(LightLayer.BLOCK, pos),
+                    level.getBrightness(LightLayer.SKY, pos));
+        }
     }
 }
