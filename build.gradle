@@ -118,7 +118,7 @@ dependencies {
 //    implementation "curse.maven:create-328085:6323264"
     implementation "curse.maven:worldedit-225608:5830452"
     implementation "curse.maven:reliquary-reincarnations-241319:7010155"
-    implementation "curse.maven:simple-burnout-torch-1353923:7042489"
+    implementation "curse.maven:simple-burnout-torch-1353923:7042561"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
