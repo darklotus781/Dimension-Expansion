@@ -25,9 +25,14 @@ public class ModLangProvider extends LanguageProvider {
         add("item.dimension_expansion.ender_cream","Ender Cream");
         add("item.dimension_expansion.ender_crystal_shard","Ender Crystal Shard");
         add("item.dimension_expansion.ender_crystal","Ender Crystal");
-        add("sounds.dimension_expansion.teleporter_activate", "Teleporter Activates");
+        add("effect.dimension_expansion.teleporter_activate", "Teleporter Activates");
+        add("effect.dimension_expansion.darkness_approaches", "Something approaches in the darkness...");
         add("effect.dimension_expansion.nightwalker", "The darkness hurts!");
         add("effect.dimension_expansion.nightwalker.description", "In the dark, you may stub your toe and take damage.");
         add("message.dimension_expansion.nightwalker_warning", "Danger waits for you in the darkness!");
+        add("death.attack.darkness", "%1$s was consumed by the darkness");
+        add("death.attack.darkness.player", "%1$s was consumed by the darkness while fighting %2$s");
+        add("subtitles.ambient.darkness", "The shadows are moving");
+        add("subtitles.ambient.darkness_whispers", "The shadows are whispering");
     }
 }

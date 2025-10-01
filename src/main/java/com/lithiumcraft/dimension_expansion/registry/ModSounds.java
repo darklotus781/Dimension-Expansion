@@ -15,7 +15,8 @@ public class ModSounds {
 
     public static final Supplier<SoundEvent> TELEPORTER_ACTIVATE = registerSoundEvent("teleporter_activate");
     public static final Supplier<SoundEvent> NIGHTWALKER_DAMAGE = registerSoundEvent("nightwalker_damage");
-
+    public static final Supplier<SoundEvent> DARKNESS_APPROACHES = registerSoundEvent("darkness_approaches");
+    public static final Supplier<SoundEvent> AMBIENT_DARKNESS = registerSoundEvent("ambient_darkness");
 
     private static Supplier<SoundEvent> registerSoundEvent(String name) {
         ResourceLocation id = ResourceLocation.fromNamespaceAndPath(DimensionExpansion.MOD_ID, name);

@@ -1,9 +1,5 @@
 package com.lithiumcraft.dimension_expansion;
 
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
@@ -16,10 +12,17 @@ public class Config
             .worldRestart()
             .define("debugEnabled", false);
 
+    private static final ModConfigSpec.BooleanValue DENY_FAKE_PLAYER_DEEP_BENEATH = BUILDER
+            .comment("Disable / Disallow Fake Players (quarry, builder and miner blocks) use in the Deep Beneath?")
+            .worldRestart()
+            .define("denyFakePlayerDeepBeneath", true);
+
     static final ModConfigSpec SPEC = BUILDER.build();
     public static boolean debugEnabled;
+    public static boolean denyFakePlayerDeepBeneath;
 
     static void onLoad(final ModConfigEvent event) {
         debugEnabled = DEBUG_ENABLED.get();
+        denyFakePlayerDeepBeneath = DENY_FAKE_PLAYER_DEEP_BENEATH.get();
     }
 }

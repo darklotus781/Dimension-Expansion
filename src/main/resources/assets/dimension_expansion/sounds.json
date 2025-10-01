@@ -1,8 +1,15 @@
 {
   "teleporter_activate": {
-    "subtitles": "sounds.dimension_expansion.teleporter_activate",
+    "subtitles": "effect.dimension_expansion.teleporter_activate",
     "sounds": [
       "dimension_expansion:teleporter_activate"
+    ]
+  },
+  "ambient_darkness": {
+    "subtitle": "subtitles.ambient.darkness",
+    "sounds": [
+      "dimension_expansion:ambient_piano",
+      "dimension_expansion:ambient_prayer"
     ]
   },
   "nightwalker_damage": {
@@ -14,6 +21,12 @@
         "volume": 1.0,
         "pitch": 1.0
       }
+    ]
+  },
+  "darkness_approaches": {
+    "subtitle": "effect.dimension_expansion.darkness_approaches",
+    "sounds": [
+      "dimension_expansion:darkness_approaches"
     ]
   }
 }

@@ -5,12 +5,17 @@
   "block.dimension_expansion.overworld_return_teleporter": "Overworld Teleporter",
   "block.dimension_expansion.stone_block_teleporter": "Stone Block Teleporter",
   "creativetab.dimension_expansion.blocks": "Dimension Expansion Blocks",
+  "death.attack.darkness": "%1$s was consumed by the darkness",
+  "death.attack.darkness.player": "%1$s was consumed by the darkness while fighting %2$s",
+  "effect.dimension_expansion.darkness_approaches": "Something approaches in the darkness...",
   "effect.dimension_expansion.nightwalker": "The darkness hurts!",
   "effect.dimension_expansion.nightwalker.description": "In the dark, you may stub your toe and take damage.",
+  "effect.dimension_expansion.teleporter_activate": "Teleporter Activates",
   "item.dimension_expansion.ender_cream": "Ender Cream",
   "item.dimension_expansion.ender_crystal": "Ender Crystal",
   "item.dimension_expansion.ender_crystal_shard": "Ender Crystal Shard",
   "item.dimension_expansion.ender_gem": "Ender Gem",
   "message.dimension_expansion.nightwalker_warning": "Danger waits for you in the darkness!",
-  "sounds.dimension_expansion.teleporter_activate": "Teleporter Activates"
+  "subtitles.ambient.darkness": "The shadows are moving",
+  "subtitles.ambient.darkness_whispers": "The shadows are whispering"
 }

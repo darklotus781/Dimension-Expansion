@@ -40,10 +40,10 @@ public class NightWalkerEffect extends MobEffect {
             return false;
         }
 
+        // Resistance check
         var mobEffectRegistry = player.level().registryAccess().registryOrThrow(Registries.MOB_EFFECT);
         var resistanceKey = ResourceKey.create(Registries.MOB_EFFECT, ModEffects.NIGHTWALKER_RESISTANCE.getId());
         Holder<MobEffect> resistanceHolder = mobEffectRegistry.getHolderOrThrow(resistanceKey);
-
         if (player.hasEffect(resistanceHolder) || player.getHealth() <= 1.0F) {
             nextDamageTick.remove(player);
             return false;
@@ -53,24 +53,23 @@ public class NightWalkerEffect extends MobEffect {
         int next = nextDamageTick.getOrDefault(player, -1);
 
         if (next == -1 || currentTick >= next) {
-            // Silent damage
-            float newHealth = Math.max(player.getHealth() - 1.0F, 1.0F);
-            player.setHealth(newHealth);
+            // Silent damage only once per scheduled interval
+            float current = player.getHealth();
+            if (current > 1.0F) {
+                player.setHealth(current - 1.0F);
+            }
 
-            // Play custom sound (with subtitle)
-            player.level().playSound(
-                    null,
-                    player.getX(), player.getY(), player.getZ(),
+            player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
                     ModSounds.NIGHTWALKER_DAMAGE.get(),
                     player.getSoundSource(),
                     1.0F,
-                    1.0F
-            );
+                    1.0F);
 
-            // Flash the screen with a darkness-like flicker
-            player.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 40, 0, false, true, false));
+            if (!player.hasEffect(MobEffects.DARKNESS)) {
+                player.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 50, 0, false, false, false));
+            }
 
-            // ⏱ Reschedule next damage
+            // Reschedule
             int delay = RANDOM.nextInt(DAMAGE_INTERVAL_TICKS_MAX - DAMAGE_INTERVAL_TICKS_MIN + 1)
                     + DAMAGE_INTERVAL_TICKS_MIN;
             nextDamageTick.put(player, currentTick + delay);
@@ -79,3 +78,69 @@ public class NightWalkerEffect extends MobEffect {
         return true;
     }
 }
+
+
+// OLD NIGHTWALKER EFFECT
+//public class NightWalkerEffect extends MobEffect {
+//    private static final int DAMAGE_INTERVAL_TICKS_MIN = 100;
+//    private static final int DAMAGE_INTERVAL_TICKS_MAX = 400;
+//    private static final Random RANDOM = new Random();
+//    private static final WeakHashMap<Player, Integer> nextDamageTick = new WeakHashMap<>();
+//
+//    public NightWalkerEffect(MobEffectCategory category, int color) {
+//        super(category, color);
+//    }
+//
+//    @Override
+//    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+//        if (!(entity instanceof ServerPlayer player)
+//                || entity.level().isClientSide()
+//                || player.isCreative()
+//                || player.isSpectator()) {
+//            return false;
+//        }
+//
+//        var mobEffectRegistry = player.level().registryAccess().registryOrThrow(Registries.MOB_EFFECT);
+//        var resistanceKey = ResourceKey.create(Registries.MOB_EFFECT, ModEffects.NIGHTWALKER_RESISTANCE.getId());
+//        Holder<MobEffect> resistanceHolder = mobEffectRegistry.getHolderOrThrow(resistanceKey);
+//
+//        if (player.hasEffect(resistanceHolder) || player.getHealth() <= 1.0F) {
+//            nextDamageTick.remove(player);
+//            return false;
+//        }
+//
+//        int currentTick = player.tickCount;
+//        int next = nextDamageTick.getOrDefault(player, -1);
+//
+//        if (next == -1 || currentTick >= next) {
+//            // Silent damage
+//            float newHealth = Math.max(player.getHealth() - 1.0F, 1.0F);
+//            player.setHealth(newHealth);
+//
+//            // Play custom sound (with subtitle)
+//            player.level().playSound(
+//                    null,
+//                    player.getX(), player.getY(), player.getZ(),
+//                    ModSounds.NIGHTWALKER_DAMAGE.get(),
+//                    player.getSoundSource(),
+//                    1.0F,
+//                    1.0F
+//            );
+//
+//            // Flash the screen with a darkness-like flicker
+//            player.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 40, 0, false, true, false));
+//
+//            // ⏱ Reschedule next damage
+//            int delay = RANDOM.nextInt(DAMAGE_INTERVAL_TICKS_MAX - DAMAGE_INTERVAL_TICKS_MIN + 1)
+//                    + DAMAGE_INTERVAL_TICKS_MIN;
+//            nextDamageTick.put(player, currentTick + delay);
+//        }
+//
+//        return true;
+//    }
+//}
