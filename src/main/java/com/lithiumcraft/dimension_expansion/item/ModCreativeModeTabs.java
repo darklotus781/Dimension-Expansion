@@ -16,7 +16,7 @@ public class ModCreativeModeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TAB =
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, DimensionExpansion.MOD_ID);
 
-    public static final Supplier<CreativeModeTab> GEODE_ITEM_TABS = CREATIVE_MODE_TAB.register("dimension_expansion_tab",
+    public static final Supplier<CreativeModeTab> MISC_TABS = CREATIVE_MODE_TAB.register("dimension_expansion_tab",
             () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModBlocks.DEEP_BENEATH_TELEPORTER.get()))
                     .title(Component.translatable("creativetab.dimension_expansion.blocks"))
                     .displayItems((itemDisplayParameters, output) -> {
@@ -28,6 +28,14 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.ENDER_CREAM.get());
                         output.accept(ModItems.ENDER_CRYSTAL.get());
                         output.accept(ModItems.ENDER_CRYSTAL_SHARD.get());
+                    }).build());
+
+    public static final Supplier<CreativeModeTab> ORES = CREATIVE_MODE_TAB.register("dimension_expansion_ores_tab",
+            () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModBlocks.QUARTZ_ORE.get()))
+                    .title(Component.translatable("creativetab.dimension_expansion.ores"))
+                    .displayItems((itemDisplayParameters, output) -> {
+                        output.accept(ModBlocks.QUARTZ_ORE.get());
+                        output.accept(ModBlocks.DEEPSLATE_QUARTZ_ORE.get());
                     }).build());
 
 

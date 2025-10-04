@@ -2,7 +2,6 @@ package com.lithiumcraft.dimension_expansion.datagen;
 
 import com.lithiumcraft.dimension_expansion.DimensionExpansion;
 import com.lithiumcraft.dimension_expansion.block.ModBlocks;
-import com.lithiumcraft.dimension_expansion.block.property.WoodType;
 import com.lithiumcraft.dimension_expansion.item.ModItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -85,6 +84,9 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .save(recipeOutput, modLoc("items/ender_gem"));
 
         smeltingRecipe(recipeOutput, "ender_crystal_shard", ModItems.ENDER_CREAM.get(), ModItems.ENDER_CRYSTAL_SHARD, 0.1F, 200);
+        smeltingRecipe(recipeOutput, "quartz_from_quartz_ore", ModBlocks.QUARTZ_ORE.get(), Items.QUARTZ, 0.2F, 200);
+        smeltingRecipe(recipeOutput, "quartz_from_deepslate_quartz_ore", ModBlocks.DEEPSLATE_QUARTZ_ORE.get(), Items.QUARTZ, 0.2F, 200);
+
     }
 
     private static ResourceLocation modLoc(String path) {
@@ -92,31 +94,31 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
     }
 
     private void smeltingRecipe(RecipeOutput recipeOutput, String name, ItemLike input, ItemLike result, float xp, int time) {
-        SimpleCookingRecipeBuilder.smelting(Ingredient.of(input), RecipeCategory.MISC, result, xp, time)
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(input.asItem()), RecipeCategory.MISC, result, xp, time)
                 .unlockedBy(getHasName(input), has(input))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(DimensionExpansion.MOD_ID, "smelting/" + name));
     }
 
     private void blastingRecipe(RecipeOutput recipeOutput, String name, ItemLike input, ItemLike result, float xp, int time) {
-        SimpleCookingRecipeBuilder.blasting(Ingredient.of(input), RecipeCategory.MISC, result, xp, time)
+        SimpleCookingRecipeBuilder.blasting(Ingredient.of(input.asItem()), RecipeCategory.MISC, result, xp, time)
                 .unlockedBy(getHasName(input), has(input))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(DimensionExpansion.MOD_ID, "blasting/" + name));
     }
 
     private void smokingRecipe(RecipeOutput recipeOutput, String name, ItemLike input, ItemLike result, float xp, int time) {
-        SimpleCookingRecipeBuilder.smoking(Ingredient.of(input), RecipeCategory.MISC, result, xp, time)
+        SimpleCookingRecipeBuilder.smoking(Ingredient.of(input.asItem()), RecipeCategory.MISC, result, xp, time)
                 .unlockedBy(getHasName(input), has(input))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(DimensionExpansion.MOD_ID, "smoking/" + name));
     }
 
     private void campfireCookingRecipe(RecipeOutput recipeOutput, String name, ItemLike input, ItemLike result, float xp, int time) {
-        SimpleCookingRecipeBuilder.campfireCooking(Ingredient.of(input), RecipeCategory.MISC, result, xp, time)
+        SimpleCookingRecipeBuilder.campfireCooking(Ingredient.of(input.asItem()), RecipeCategory.MISC, result, xp, time)
                 .unlockedBy(getHasName(input), has(input))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(DimensionExpansion.MOD_ID, "campfire/" + name));
     }
 
     private void stonecuttingRecipe(RecipeOutput recipeOutput, String name, ItemLike input, ItemLike result, int count) {
-        SingleItemRecipeBuilder.stonecutting(Ingredient.of(input), RecipeCategory.BUILDING_BLOCKS, result, count)
+        SingleItemRecipeBuilder.stonecutting(Ingredient.of(input.asItem()), RecipeCategory.BUILDING_BLOCKS, result, count)
                 .unlockedBy(getHasName(input), has(input))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(DimensionExpansion.MOD_ID, "stonecutting/" + name));
     }
@@ -127,9 +129,9 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                                          ItemLike base,
                                          ItemLike addition) {
         SmithingTransformRecipeBuilder.smithing(
-                        Ingredient.of(template),
-                        Ingredient.of(base),
-                        Ingredient.of(addition),
+                        Ingredient.of(template.asItem()),
+                        Ingredient.of(base.asItem()),
+                        Ingredient.of(addition.asItem()),
                         RecipeCategory.MISC,
                         output.asItem()) // ✅ convert to Item
                 .unlocks(getHasName(base), has(base))

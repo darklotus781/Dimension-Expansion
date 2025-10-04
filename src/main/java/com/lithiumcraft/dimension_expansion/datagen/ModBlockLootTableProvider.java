@@ -1,17 +1,12 @@
 package com.lithiumcraft.dimension_expansion.datagen;
 
 import com.lithiumcraft.dimension_expansion.block.ModBlocks;
-import com.lithiumcraft.dimension_expansion.block.property.WoodType;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
 import java.util.Set;
 
@@ -26,6 +21,14 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.dropSelf(ModBlocks.MINING_TELEPORTER.get());
         this.dropSelf(ModBlocks.STONE_BLOCK_TELEPORTER.get());
         this.dropSelf(ModBlocks.BLANK_TELEPORTER.get());
+
+        // Quartz Ore
+        this.add(ModBlocks.QUARTZ_ORE.get(),
+                (block) -> createOreDrop(block, Items.QUARTZ));
+
+        // Deepslate Quartz Ore
+        this.add(ModBlocks.DEEPSLATE_QUARTZ_ORE.get(),
+                (block) -> createOreDrop(block, Items.QUARTZ));
     }
 
     @Override

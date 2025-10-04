@@ -1,8 +1,8 @@
 {
-  "feature": "minecraft:ore_redstone",
+  "feature": "dimension_expansion:ore_redstone",
   "placement": [
     {
-      "count": 4,
+      "count": 12,
       "type": "minecraft:count"
     },
     {
@@ -11,10 +11,10 @@
     {
       "height": {
         "min_inclusive": {
-          "above_bottom": 128
+          "absolute": -64
         },
         "max_inclusive": {
-          "absolute": 205
+          "absolute": 320
         },
         "type": "minecraft:uniform"
       },

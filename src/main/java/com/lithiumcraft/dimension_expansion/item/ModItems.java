@@ -2,7 +2,6 @@ package com.lithiumcraft.dimension_expansion.item;
 
 import com.lithiumcraft.dimension_expansion.DimensionExpansion;
 import com.lithiumcraft.dimension_expansion.block.ModBlocks;
-import com.lithiumcraft.dimension_expansion.block.property.WoodType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -10,12 +9,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Map;
-import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(DimensionExpansion.MOD_ID);

@@ -2,20 +2,12 @@ package com.lithiumcraft.dimension_expansion.datagen;
 
 import com.lithiumcraft.dimension_expansion.DimensionExpansion;
 import com.lithiumcraft.dimension_expansion.block.ModBlocks;
-import com.lithiumcraft.dimension_expansion.block.property.WoodType;
-import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.WallTorchBlock;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
-import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
-import net.neoforged.neoforge.client.model.generators.ModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
-import java.util.Locale;
 
 public class ModBlockStateProvider extends BlockStateProvider {
     public ModBlockStateProvider(PackOutput output, ExistingFileHelper exFileHelper) {
@@ -29,6 +21,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockWithItem(ModBlocks.STONE_BLOCK_TELEPORTER);
         blockWithItem(ModBlocks.OVERWORLD_RETURN_TELEPORTER);
         blockWithItem(ModBlocks.BLANK_TELEPORTER);
+        blockWithItem(ModBlocks.QUARTZ_ORE);
+        blockWithItem(ModBlocks.DEEPSLATE_QUARTZ_ORE);
     }
 
     private void blockWithItem(DeferredBlock<?> deferredBlock) {

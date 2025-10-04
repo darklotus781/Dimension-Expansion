@@ -1,0 +1,114 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": "#dimension_expansion:deep_beneath_biomes",
+  "spawners": [
+    {
+      "type": "minecraft:creeper",
+      "weight": 100,
+      "minCount": 32,
+      "maxCount": 32
+    },
+    {
+      "type": "minecraft:skeleton",
+      "weight": 100,
+      "minCount": 32,
+      "maxCount": 32
+    },
+    {
+      "type": "minecraft:zombie",
+      "weight": 95,
+      "minCount": 32,
+      "maxCount": 32
+    },
+    {
+      "type": "minecraft:cave_spider",
+      "weight": 50,
+      "minCount": 16,
+      "maxCount": 32
+    },
+    {
+      "type": "minecraft:piglin_brute",
+      "weight": 40,
+      "minCount": 2,
+      "maxCount": 6
+    },
+    {
+      "type": "minecraft:breeze",
+      "minCount": 2,
+      "maxCount": 4,
+      "weight": 20
+    },
+    {
+      "type": "minecraft:guardian",
+      "minCount": 4,
+      "maxCount": 16,
+      "weight": 20
+    },
+    {
+      "type": "minecraft:vindicator",
+      "weight": 40,
+      "minCount": 1,
+      "maxCount": 4
+    },
+    {
+      "type": "minecraft:ghast",
+      "weight": 25,
+      "minCount": 2,
+      "maxCount": 4
+    },
+    {
+      "type": "minecraft:slime",
+      "minCount": 32,
+      "maxCount": 32,
+      "weight": 100
+    },
+    {
+      "type": "minecraft:enderman",
+      "weight": 20,
+      "minCount": 8,
+      "maxCount": 32
+    },
+    {
+      "type": "minecraft:phantom",
+      "weight": 5,
+      "minCount": 1,
+      "maxCount": 2
+    },
+    {
+      "type": "minecraft:illusioner",
+      "weight": 1,
+      "minCount": 1,
+      "maxCount": 2
+    },
+    {
+      "type": "minecraft:stray",
+      "minCount": 8,
+      "maxCount": 12,
+      "weight": 80
+    },
+    {
+      "type": "minecraft:witch",
+      "minCount": 8,
+      "maxCount": 8,
+      "weight": 5
+    },
+    {
+      "type": "minecraft:wither_skeleton",
+      "minCount": 2,
+      "maxCount": 4,
+      "weight": 20
+    },
+    {
+      "type": "minecraft:zombie",
+      "minCount": 32,
+      "maxCount": 32,
+      "weight": 95
+    },
+    {
+      "type": "minecraft:zombie_villager",
+      "minCount": 8,
+      "maxCount": 8,
+      "weight": 5
+    }
+  ]
+}

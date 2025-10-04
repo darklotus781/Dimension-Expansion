@@ -1,0 +1,13 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": "#dimension_expansion:deep_beneath_biomes",
+  "spawners": [
+    {
+      "type": "minecraft:bat",
+      "minCount": 8,
+      "maxCount": 12,
+      "weight": 10
+    }
+  ]
+}
+

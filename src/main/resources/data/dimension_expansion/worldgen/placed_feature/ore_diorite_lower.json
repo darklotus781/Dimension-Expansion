@@ -1,5 +1,5 @@
 {
-  "feature": "minecraft:ore_diorite",
+  "feature": "dimension_expansion:ore_diorite",
   "placement": [
     {
       "type": "minecraft:count",

@@ -1,5 +1,5 @@
 {
-  "feature": "minecraft:ore_andesite",
+  "feature": "dimension_expansion:ore_andesite",
   "placement": [
     {
       "type": "minecraft:count",

@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "#dimension_expansion:mining/vanilla_ores",
+    "#dimension_expansion:mining/modded_ores"
+  ]
+}

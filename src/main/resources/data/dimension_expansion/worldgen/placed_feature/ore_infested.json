@@ -1,5 +1,5 @@
 {
-  "feature": "minecraft:ore_infested",
+  "feature": "dimension_expansion:ore_infested",
   "placement": [
     {
       "type": "minecraft:count",

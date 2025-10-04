@@ -2,17 +2,14 @@ package com.lithiumcraft.dimension_expansion.datagen;
 
 import com.lithiumcraft.dimension_expansion.DimensionExpansion;
 import com.lithiumcraft.dimension_expansion.block.ModBlocks;
-import com.lithiumcraft.dimension_expansion.block.property.WoodType;
 import com.lithiumcraft.dimension_expansion.util.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 
 public class ModBlockTagProvider extends BlockTagsProvider {
@@ -29,10 +26,20 @@ public class ModBlockTagProvider extends BlockTagsProvider {
                 .add(ModBlocks.OVERWORLD_RETURN_TELEPORTER.get());
 
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
-                .add(ModBlocks.DEEP_BENEATH_TELEPORTER.get());
+                .add(ModBlocks.DEEP_BENEATH_TELEPORTER.get())
+                .add(ModBlocks.QUARTZ_ORE.get())
+                .add(ModBlocks.DEEPSLATE_QUARTZ_ORE.get());
 
         tag(BlockTags.NEEDS_DIAMOND_TOOL)
                 .add(ModBlocks.DEEP_BENEATH_TELEPORTER.get());
+
+        tag(BlockTags.NEEDS_IRON_TOOL)
+                .add(ModBlocks.QUARTZ_ORE.get())
+                .add(ModBlocks.DEEPSLATE_QUARTZ_ORE.get());
+
+        tag(BlockTags.OVERWORLD_CARVER_REPLACEABLES)
+                .add(ModBlocks.QUARTZ_ORE.get())
+                .add(ModBlocks.DEEPSLATE_QUARTZ_ORE.get());
     }
 
 }

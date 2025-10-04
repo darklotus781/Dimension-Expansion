@@ -1,0 +1,5 @@
+{
+  "type": "neoforge:remove_features",
+  "biomes": "#dimension_expansion:deep_beneath_biomes",
+  "features": "#minecraft:has_structure"
+}

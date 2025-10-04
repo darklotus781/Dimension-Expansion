@@ -1,5 +1,5 @@
 {
-  "feature": "minecraft:ore_lapis",
+  "feature": "dimension_expansion:ore_lapis",
   "placement": [
     {
       "count": 2,
@@ -11,10 +11,10 @@
     {
       "height": {
         "min_inclusive": {
-          "absolute": 64
+          "absolute": -32
         },
         "max_inclusive": {
-          "absolute": 150
+          "absolute": 320
         },
         "type": "minecraft:trapezoid"
       },

@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "#dimension_expansion:deep_beneath/vanilla_ores",
+    "#dimension_expansion:deep_beneath/modded_ores"
+  ]
+}

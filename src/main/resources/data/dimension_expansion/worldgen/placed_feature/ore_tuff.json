@@ -1,5 +1,5 @@
 {
-  "feature": "minecraft:ore_tuff",
+  "feature": "dimension_expansion:ore_tuff",
   "placement": [
     {
       "type": "minecraft:count",
