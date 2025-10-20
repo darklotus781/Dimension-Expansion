@@ -1,0 +1,15 @@
+{
+  "feature": "dimension_expansion:cobble_spikes",
+  "placement": [
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:count",
+      "count": 1
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

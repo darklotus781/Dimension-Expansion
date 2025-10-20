@@ -1,0 +1,24 @@
+{
+  "type": "dimension_expansion:cobble_spikes",
+  "config": {
+    "ceiling_height": {
+      "type": "minecraft:uniform",
+      "max_inclusive": 32,
+      "min_inclusive": 6
+    },
+    "ceiling_tile": 1,
+    "floor_height": {
+      "type": "minecraft:uniform",
+      "max_inclusive": 3,
+      "min_inclusive": 1
+    },
+    "floor_radius": {
+      "type": "minecraft:uniform",
+      "max_inclusive": 3,
+      "min_inclusive": 1
+    },
+    "floor_tile": 5,
+    "y_max": 144,
+    "y_min": 80
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "dimension_expansion:cobble_spire",
+  "config": {
+    "radius": {
+      "type": "minecraft:uniform",
+      "max_inclusive": 7,
+      "min_inclusive": 4
+    },
+    "y_max": 144,
+    "y_min": 80
+  }
+}

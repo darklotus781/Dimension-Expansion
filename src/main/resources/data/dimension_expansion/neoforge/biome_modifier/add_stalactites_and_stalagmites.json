@@ -1,0 +1,9 @@
+{
+  "type": "neoforge:add_features",
+  "features": [
+    "dimension_expansion:cobble_spikes",
+    "dimension_expansion:cobble_spire"
+  ],
+  "step": "underground_decoration",
+  "biomes": "dimension_expansion:abandoned_mines"
+}

@@ -7,6 +7,7 @@ import com.lithiumcraft.dimension_expansion.event.DeepBeneathMobSpawnHandler;
 import com.lithiumcraft.dimension_expansion.item.ModCreativeModeTabs;
 import com.lithiumcraft.dimension_expansion.item.ModItems;
 import com.lithiumcraft.dimension_expansion.registry.ModEffects;
+import com.lithiumcraft.dimension_expansion.registry.ModFeatures;
 import com.lithiumcraft.dimension_expansion.registry.ModSounds;
 import com.mojang.logging.LogUtils;
 import net.neoforged.api.distmarker.Dist;
@@ -39,6 +40,7 @@ public class DimensionExpansion
         ModSounds.register(modEventBus);
         ModEffects.register(modEventBus);
         ModLootModifiers.register(modEventBus);
+        ModFeatures.register(modEventBus);
 
         ModCreativeModeTabs.register(modEventBus);
 

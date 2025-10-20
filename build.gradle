@@ -3,6 +3,7 @@ plugins {
     id 'maven-publish'
     id 'idea'
     id 'net.neoforged.moddev' version '2.0.96'
+    id "me.shedaniel.unified-publishing" version "0.1.+"
 }
 
 def secrets = new Properties()
@@ -24,6 +25,11 @@ if (secretsFile.exists()) {
 
 version = mod_version
 group = mod_group_id
+
+var mrToken = secrets.getProperty('mr_token')
+var mrID = "lWgCtgxh"
+var cfToken = secrets.getProperty('cf_token')
+var cfID = "1306668"
 
 repositories {
     mavenLocal()
@@ -179,5 +185,39 @@ idea {
     module {
         downloadSources = true
         downloadJavadoc = true
+    }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Unified Publishing setup (Modrinth + CurseForge)
+// ─────────────────────────────────────────────────────────────
+unifiedPublishing {
+    project {
+        // Jar to upload — for NeoForge use the built remapped jar
+        mainPublication tasks.jar
+        // Shared metadata
+        version = project.version
+        changelog = rootProject.file("changelog/${minecraft_version}-${mod_version}.md").text
+        releaseType = "release"
+        gameVersions = [minecraft_version]
+        gameLoaders = ["neoforge"]
+
+        // CurseForge configuration
+        if (cfToken != null && !cfToken.isBlank()) {
+            curseforge {
+                displayName = "${mod_name} - ${minecraft_version} - ${project.version}"
+                token = cfToken
+                id = cfID
+            }
+        }
+
+        // Modrinth configuration
+        if (mrToken != null && !mrToken.isBlank()) {
+            modrinth {
+                displayName = "${mod_name} ${project.version}"
+                token = mrToken
+                id = mrID
+            }
+        }
     }
 }

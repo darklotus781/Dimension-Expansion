@@ -3,7 +3,7 @@
   "argument1": {
     "type": "minecraft:y_clamped_gradient",
     "from_y": 95,
-    "to_y": 240,
+    "to_y": 200,
     "from_value": -2,
     "to_value": 1
   },
@@ -11,6 +11,6 @@
     "type": "minecraft:noise",
     "noise": "dimension_expansion:ceiling",
     "xz_scale": 0.66,
-    "y_scale": 0.2
+    "y_scale": 0.05
   }
 }

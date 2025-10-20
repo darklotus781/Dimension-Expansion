@@ -175,7 +175,7 @@ public class TeleporterBlockEntity extends BlockEntity implements INBTSerializab
             ModBlocks.DEEP_BENEATH_TELEPORTER.get(), new TeleporterRules(
                     DimensionExpansionDimensions.DEEP_BENEATH,
                     true,
-                    (level, base) -> new BlockPos(base.getX(), 128, base.getZ()),
+                    (level, base) -> new BlockPos(base.getX(), 150, base.getZ()),
                     StructureBuilder::buildDeepBeneathPlatform
             ),
 

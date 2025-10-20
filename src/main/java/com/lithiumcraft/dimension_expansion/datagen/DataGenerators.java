@@ -49,6 +49,7 @@ public class DataGenerators {
             generator.addProvider(true, blockTagsProvider);
             ModDamageTypeTagProvider modDamageTypeTagsProvider = new ModDamageTypeTagProvider(packOutput, lookupProvider, existingFileHelper);
             generator.addProvider(true, modDamageTypeTagsProvider);
+
         }
     }
 }
