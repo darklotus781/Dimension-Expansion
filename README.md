@@ -89,7 +89,7 @@ Please include:
 
 ## License
 
-This mod is licensed under the **MIT License**.
+This mod is licensed under the [**GPLv3 License**](LICENSE).
 
 ---
 
