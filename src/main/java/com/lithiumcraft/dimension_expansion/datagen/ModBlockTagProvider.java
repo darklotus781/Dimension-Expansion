@@ -20,7 +20,7 @@ package com.lithiumcraft.dimension_expansion.datagen;
 
 import com.lithiumcraft.dimension_expansion.DimensionExpansion;
 import com.lithiumcraft.dimension_expansion.block.ModBlocks;
-import com.lithiumcraft.dimension_expansion.util.ModTags;
+import com.lithiumcraft.dimension_expansion.registry.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
@@ -45,11 +45,15 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(ModBlocks.DEEP_BENEATH_TELEPORTER.get())
+                .add(ModBlocks.MINING_TELEPORTER.get())
+                .add(ModBlocks.STONE_BLOCK_TELEPORTER.get())
                 .add(ModBlocks.QUARTZ_ORE.get())
                 .add(ModBlocks.DEEPSLATE_QUARTZ_ORE.get());
 
         tag(BlockTags.NEEDS_DIAMOND_TOOL)
-                .add(ModBlocks.DEEP_BENEATH_TELEPORTER.get());
+                .add(ModBlocks.DEEP_BENEATH_TELEPORTER.get())
+                .add(ModBlocks.MINING_TELEPORTER.get())
+                .add(ModBlocks.STONE_BLOCK_TELEPORTER.get());
 
         tag(BlockTags.NEEDS_IRON_TOOL)
                 .add(ModBlocks.QUARTZ_ORE.get())
@@ -58,6 +62,21 @@ public class ModBlockTagProvider extends BlockTagsProvider {
         tag(BlockTags.OVERWORLD_CARVER_REPLACEABLES)
                 .add(ModBlocks.QUARTZ_ORE.get())
                 .add(ModBlocks.DEEPSLATE_QUARTZ_ORE.get());
+
+        tag(BlockTags.FEATURES_CANNOT_REPLACE)
+                .addTag(ModTags.Blocks.TELEPORTER_BLOCKS);
+
+        tag(ModTags.Blocks.RELOCATION_NOT_SUPPORTED)
+                .addTag(ModTags.Blocks.TELEPORTER_BLOCKS);
+
+        tag(BlockTags.WITHER_IMMUNE)
+                .addTag(ModTags.Blocks.TELEPORTER_BLOCKS);
+
+        tag(BlockTags.DRAGON_IMMUNE)
+                .addTag(ModTags.Blocks.TELEPORTER_BLOCKS);
+
+        tag(ModTags.Blocks.BLACKLISTED_SPATIAL)
+                .addTag(ModTags.Blocks.TELEPORTER_BLOCKS);
     }
 
 }

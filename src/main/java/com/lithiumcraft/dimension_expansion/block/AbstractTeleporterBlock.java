@@ -21,11 +21,21 @@ package com.lithiumcraft.dimension_expansion.block;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public abstract class AbstractTeleporterBlock extends BaseEntityBlock {
 
-    public AbstractTeleporterBlock(BlockBehaviour.Properties props) {
+    // Shared property factory for all teleporters
+    protected static BlockBehaviour.Properties teleporterProps() {
+        return BlockBehaviour.Properties.ofFullCopy(Blocks.OBSIDIAN)
+                .lightLevel(s -> 15)
+                .requiresCorrectToolForDrops()
+                .strength(100.0F, 1200.0F)
+                .noOcclusion();
+    }
+
+    protected AbstractTeleporterBlock(BlockBehaviour.Properties props) {
         super(props);
     }
 

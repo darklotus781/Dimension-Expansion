@@ -1,4 +1,6 @@
 {
+  "biome.dimension_expansion.abandoned_mines": "Deep Beneath",
+  "biome.dimension_expansion.mining": "Mining Dimension",
   "block.dimension_expansion.blank_teleporter": "Teleporter Template",
   "block.dimension_expansion.deep_beneath_teleporter": "Deep Beneath Teleporter",
   "block.dimension_expansion.deepslate_quartz_ore": "Deepslate Quartz Ore",
@@ -13,6 +15,7 @@
   "effect.dimension_expansion.darkness_approaches": "Something approaches in the darkness...",
   "effect.dimension_expansion.nightwalker": "The darkness hurts!",
   "effect.dimension_expansion.nightwalker.description": "In the dark, you may stub your toe and take damage.",
+  "effect.dimension_expansion.nightwalker_resistance": "Not Implemented!",
   "effect.dimension_expansion.teleporter_activate": "Teleporter Activates",
   "item.dimension_expansion.ender_cream": "Ender Cream",
   "item.dimension_expansion.ender_crystal": "Ender Crystal",

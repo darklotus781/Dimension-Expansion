@@ -46,6 +46,7 @@ public class ModLangProvider extends LanguageProvider {
         add("effect.dimension_expansion.teleporter_activate", "Teleporter Activates");
         add("effect.dimension_expansion.darkness_approaches", "Something approaches in the darkness...");
         add("effect.dimension_expansion.nightwalker", "The darkness hurts!");
+        add("effect.dimension_expansion.nightwalker_resistance", "Not Implemented!");
         add("effect.dimension_expansion.nightwalker.description", "In the dark, you may stub your toe and take damage.");
         add("message.dimension_expansion.nightwalker_warning", "Danger waits for you in the darkness!");
         add("death.attack.darkness", "%1$s was consumed by the darkness");
@@ -54,5 +55,7 @@ public class ModLangProvider extends LanguageProvider {
         add("subtitles.ambient.darkness_whispers", "The shadows are whispering");
         add("block.dimension_expansion.quartz_ore", "Quartz Ore");
         add("block.dimension_expansion.deepslate_quartz_ore", "Deepslate Quartz Ore");
+        add("biome.dimension_expansion.abandoned_mines", "Deep Beneath");
+        add("biome.dimension_expansion.mining", "Mining Dimension");
     }
 }

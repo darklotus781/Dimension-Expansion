@@ -207,7 +207,7 @@ public class TeleporterBlockEntity extends BlockEntity implements INBTSerializab
             ModBlocks.STONE_BLOCK_TELEPORTER.get(), new TeleporterRules(
                     DimensionExpansionDimensions.STONE_BLOCK,
                     true,
-                    (level, base) -> new BlockPos(base.getX(), 192, base.getZ()),
+                    (level, base) -> new BlockPos(base.getX(), 64, base.getZ()),
                     StructureBuilder::buildStoneBlockPlatform
             )
     );

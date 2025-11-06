@@ -61,30 +61,54 @@ public class StructureBuilder {
     }
 
     public static void buildStoneBlockPlatform(ServerLevel level, BlockPos center) {
-        BlockState cobble = Blocks.STONE.defaultBlockState();
-        BlockState teleporter = ModBlocks.OVERWORLD_RETURN_TELEPORTER.get().defaultBlockState();
+        final BlockState shell = Blocks.STONE.defaultBlockState();
+        final BlockState floor = Blocks.STONE.defaultBlockState();
+        final BlockState teleporter = ModBlocks.OVERWORLD_RETURN_TELEPORTER.get().defaultBlockState();
 
-        // Clear space: 5x5 area, 4 blocks high (Y to Y+3)
-        for (int dx = -2; dx <= 2; dx++) {
-            for (int dz = -2; dz <= 2; dz++) {
-                for (int dy = 0; dy <= 3; dy++) {
-                    BlockPos target = center.offset(dx, dy, dz);
-                    BlockState state = level.getBlockState(target);
-                    level.setBlockAndUpdate(target, Blocks.AIR.defaultBlockState());
+        final int DH = 4;  // dome vertical offset
+        final int R  = 9;  // radius
+
+        // “WorldEdit + tolerance” thresholds
+        final double outer = R + 0.5;
+        final double inner = R - 0.5;
+        final double smooth = 0.25;  // small safety margin to prevent voxel skips
+        final double rOuter2 = (outer + smooth) * (outer + smooth);
+        final double rInner2 = (inner - smooth) * (inner - smooth);
+
+        // --- 1. Carve interior (everything strictly inside inner surface) ---
+        for (int x = -R - 1; x <= R + 1; x++) {
+            for (int y = 0; y <= R + DH + 1; y++) {
+                for (int z = -R - 1; z <= R + 1; z++) {
+                    double d2 = x * x + (y - DH) * (y - DH) + z * z;
+                    if (d2 < rInner2) {
+                        level.setBlockAndUpdate(center.offset(x, y, z), Blocks.AIR.defaultBlockState());
+                    }
                 }
             }
         }
 
-        // Platform layer at Y
-        for (int dx = -2; dx <= 2; dx++) {
-            for (int dz = -2; dz <= 2; dz++) {
-                BlockPos pos = center.offset(dx, 0, dz);
-                level.setBlockAndUpdate(pos, cobble);
+        // --- 2. Floor and teleporter ---
+        for (int dx = -R; dx <= R; dx++) {
+            for (int dz = -R; dz <= R; dz++) {
+                level.setBlockAndUpdate(center.offset(dx, 0, dz), floor);
             }
         }
+        level.setBlockAndUpdate(center, teleporter);
 
-        // Teleporter block (Y + 1)
-        level.setBlockAndUpdate(center.above(), teleporter);
+        // --- 3. Shell (top hemisphere) ---
+        for (int x = -R - 1; x <= R + 1; x++) {
+            for (int y = 1; y <= R; y++) {
+                for (int z = -R - 1; z <= R + 1; z++) {
+                    double dist2 = x * x + (y - DH) * (y - DH) + z * z;
+
+                    // Allow ±smooth band to connect diagonal voxels
+                    if (dist2 >= rInner2 - (smooth * smooth)
+                            && dist2 <= rOuter2 + (smooth * smooth)) {
+                        level.setBlockAndUpdate(center.offset(x, y, z), shell);
+                    }
+                }
+            }
+        }
     }
 
     public static void buildMiningPlatform(ServerLevel level, BlockPos center) {

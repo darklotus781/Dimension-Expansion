@@ -25,11 +25,10 @@ if (secretsFile.exists()) {
 
 version = mod_version
 group = mod_group_id
-
 var mrToken = secrets.getProperty('mr_token')
-var mrID = "lWgCtgxh"
+var mrID = modrinth_id
 var cfToken = secrets.getProperty('cf_token')
-var cfID = "1306668"
+var cfID = curseforge_id
 
 repositories {
     mavenLocal()
@@ -93,7 +92,7 @@ neoForge {
 
 
     // This line is optional. Access Transformers are automatically detected
-    // accessTransformers.add('src/main/resources/META-INF/accesstransformer.cfg')
+//    accessTransformers.add('src/main/resources/META-INF/accesstransformer.cfg')
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.

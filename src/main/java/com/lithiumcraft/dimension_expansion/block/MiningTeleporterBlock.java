@@ -35,7 +35,7 @@ import javax.annotation.Nullable;
 
 public class MiningTeleporterBlock extends AbstractTeleporterBlock {
     public MiningTeleporterBlock() {
-        super(Properties.ofFullCopy(Blocks.OBSIDIAN).lightLevel(s -> 15).requiresCorrectToolForDrops());
+        super(teleporterProps());
     }
 
     @Nullable

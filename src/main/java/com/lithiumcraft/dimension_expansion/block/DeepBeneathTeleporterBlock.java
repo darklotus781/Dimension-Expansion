@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
 
 public class DeepBeneathTeleporterBlock extends AbstractTeleporterBlock {
     public DeepBeneathTeleporterBlock() {
-        super(BlockBehaviour.Properties.ofFullCopy(Blocks.OBSIDIAN).lightLevel(s -> 15).requiresCorrectToolForDrops());
+        super(teleporterProps());
     }
 
     @Nullable

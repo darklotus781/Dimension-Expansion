@@ -1,14 +1,4 @@
 {
   "replace": false,
-  "values": [
-    "dimension_expansion:ore_coal",
-    "dimension_expansion:ore_copper",
-    "dimension_expansion:ore_diamond",
-    "dimension_expansion:ore_emerald",
-    "dimension_expansion:ore_gold",
-    "dimension_expansion:ore_iron",
-    "dimension_expansion:ore_lapis",
-    "dimension_expansion:ore_netherite",
-    "dimension_expansion:ore_redstone"
-  ]
+  "values": []
 }
