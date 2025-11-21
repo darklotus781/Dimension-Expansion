@@ -201,6 +201,13 @@ unifiedPublishing {
         gameVersions = [minecraft_version]
         gameLoaders = ["neoforge"]
 
+        relations {
+            depends { // Mark as a required dependency
+                curseforge = "simple-burnout-torch" // Optional, project slug
+                modrinth = "simple-burnout-torch" // Optional, project slug or id
+            }
+        }
+
         // CurseForge configuration
         if (cfToken != null && !cfToken.isBlank()) {
             curseforge {
