@@ -29,10 +29,7 @@ import net.minecraft.world.level.block.Block;
 public class ModTags {
     public static class Blocks {
         public static final TagKey<Block> TELEPORTER_BLOCKS = createTag("teleporter_blocks");
-        public static final TagKey<Block> UPSIDE_DOWN_PORTAL_FRAME_BLOCKS = createTag("upside_down_portal_frame_blocks");
-
         public static final TagKey<Block> RELOCATION_NOT_SUPPORTED = createTag("c","relocation_not_supported");
-
         public static final TagKey<Block> BLACKLISTED_SPATIAL = createTag("ae2","blacklisted/spatial");
 
 
@@ -46,8 +43,7 @@ public class ModTags {
     }
 
     public static class Items {
-//        public static final TagKey<Item> WRENCHES = createTag("wrenches");
-//        public static final TagKey<Item> ANDESITE_ALLOY_INGOTS = createTag("c", "ingots/andesite_alloy");
+        public static final TagKey<Item> TELEPORTER_BLOCKS = createTag("teleporter_blocks");
 
         private static TagKey<Item> createTag(String name) {
             return ItemTags.create(ResourceLocation.fromNamespaceAndPath(DimensionExpansion.MOD_ID, name));

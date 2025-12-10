@@ -65,6 +65,7 @@ public class DataGenerators {
 
             BlockTagsProvider blockTagsProvider = new ModBlockTagProvider(packOutput, lookupProvider, existingFileHelper);
             generator.addProvider(true, blockTagsProvider);
+            generator.addProvider(event.includeServer(), new ModItemTagProvider(packOutput, lookupProvider, blockTagsProvider.contentsGetter(), existingFileHelper));
             ModDamageTypeTagProvider modDamageTypeTagsProvider = new ModDamageTypeTagProvider(packOutput, lookupProvider, existingFileHelper);
             generator.addProvider(true, modDamageTypeTagsProvider);
 
