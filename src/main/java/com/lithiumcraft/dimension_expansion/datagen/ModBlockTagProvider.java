@@ -77,6 +77,18 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 
         tag(ModTags.Blocks.BLACKLISTED_SPATIAL)
                 .addTag(ModTags.Blocks.TELEPORTER_BLOCKS);
+
+        tag(ModTags.Blocks.ORES)
+                .add(ModBlocks.QUARTZ_ORE.get(), ModBlocks.DEEPSLATE_QUARTZ_ORE.get());
+
+        tag(ModTags.Blocks.ORES_QUARTZ)
+                .add(ModBlocks.QUARTZ_ORE.get(), ModBlocks.DEEPSLATE_QUARTZ_ORE.get());
+
+        tag(ModTags.Blocks.ORES_IN_GROUND_STONE)
+                .add(ModBlocks.QUARTZ_ORE.get());
+
+        tag(ModTags.Blocks.ORES_IN_GROUND_DEEPSLATE)
+                .add(ModBlocks.DEEPSLATE_QUARTZ_ORE.get());
     }
 
 }

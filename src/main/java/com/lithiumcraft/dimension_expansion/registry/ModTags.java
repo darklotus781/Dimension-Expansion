@@ -31,6 +31,10 @@ public class ModTags {
         public static final TagKey<Block> TELEPORTER_BLOCKS = createTag("teleporter_blocks");
         public static final TagKey<Block> RELOCATION_NOT_SUPPORTED = createTag("c","relocation_not_supported");
         public static final TagKey<Block> BLACKLISTED_SPATIAL = createTag("ae2","blacklisted/spatial");
+        public static final TagKey<Block> ORES = createTag("c", "ores");
+        public static final TagKey<Block> ORES_QUARTZ = createTag("c", "ores/quartz");
+        public static final TagKey<Block> ORES_IN_GROUND_STONE = createTag("c", "ores_in_ground/stone");
+        public static final TagKey<Block> ORES_IN_GROUND_DEEPSLATE = createTag("c", "ores_in_ground/deepslate");
 
 
         private static TagKey<Block> createTag(String name) {
@@ -44,6 +48,10 @@ public class ModTags {
 
     public static class Items {
         public static final TagKey<Item> TELEPORTER_BLOCKS = createTag("teleporter_blocks");
+        public static final TagKey<Item> ORES = createTag("c", "ores");
+        public static final TagKey<Item> ORES_QUARTZ = createTag("c", "ores/quartz");
+        public static final TagKey<Item> ORES_IN_GROUND_STONE = createTag("c", "ores_in_ground/stone");
+        public static final TagKey<Item> ORES_IN_GROUND_DEEPSLATE = createTag("c", "ores_in_ground/deepslate");
 
         private static TagKey<Item> createTag(String name) {
             return ItemTags.create(ResourceLocation.fromNamespaceAndPath(DimensionExpansion.MOD_ID, name));

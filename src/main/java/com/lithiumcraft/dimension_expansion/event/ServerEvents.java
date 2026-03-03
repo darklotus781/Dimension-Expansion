@@ -19,10 +19,14 @@
 package com.lithiumcraft.dimension_expansion.event;
 
 import com.lithiumcraft.dimension_expansion.DimensionExpansion;
+import com.lithiumcraft.dimension_expansion.block.ModBlocks;
 import com.lithiumcraft.dimension_expansion.blockentity.TeleporterBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
@@ -43,7 +47,7 @@ public class ServerEvents {
         Level level = event.getLevel();
         Player player = event.getEntity();
 
-        if (!(player instanceof ServerPlayer serverPlayer) || level.isClientSide) return;
+        if (!(player instanceof ServerPlayer serverPlayer) || level.isClientSide()) return;
 
         BlockPos pos = event.getPos();
         BlockState state = level.getBlockState(pos);
@@ -55,11 +59,28 @@ public class ServerEvents {
         if (!state.is(teleportTag)) return;
 
         BlockEntity be = level.getBlockEntity(pos);
-        if (be instanceof TeleporterBlockEntity teleporter) {
-            teleporter.teleport(serverPlayer);
-            event.setCanceled(true);
-            event.setCancellationResult(InteractionResult.SUCCESS);
+        if (!(be instanceof TeleporterBlockEntity teleporter)) return;
+
+        boolean success = teleporter.teleport(serverPlayer);
+
+        event.setCanceled(true);
+        event.setCancellationResult(success ? InteractionResult.SUCCESS : InteractionResult.FAIL);
+
+        // Only the OVERWORLD_RETURN_TELEPORTER should ever show "link lost".
+        if (!success && state.is(ModBlocks.OVERWORLD_RETURN_TELEPORTER.get())) {
+            level.playSound(
+                    null,
+                    pos,
+                    SoundEvents.VILLAGER_NO,
+                    SoundSource.BLOCKS,
+                    1.0F,
+                    1.0F
+            );
+
+            serverPlayer.displayClientMessage(
+                    Component.literal("Teleporter link lost."),
+                    true
+            );
         }
     }
 }
-

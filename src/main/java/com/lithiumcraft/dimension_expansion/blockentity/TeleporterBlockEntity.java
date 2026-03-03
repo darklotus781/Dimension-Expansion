@@ -47,14 +47,27 @@ import net.neoforged.neoforge.common.util.INBTSerializable;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Stores the teleport target location (e.g. the overworld destination for a Deep Beneath teleporter).
+ *
+ * Rules:
+ * - OVERWORLD_RETURN_TELEPORTER is the ONLY teleporter that can be "link lost" (teleport returns false).
+ * - Origin teleporters (deep_beneath/mining/stone_block) should always create/relink a return teleporter
+ *   in the destination dimension at the desired arrival coords.
+ * - Never recreate missing origin teleporters when returning (prevents dupes).
+ *
+ * Return value:
+ * - teleport(...) returns true on success, false on failure (caller handles sound/message).
+ */
 public class TeleporterBlockEntity extends BlockEntity implements INBTSerializable<CompoundTag> {
-    private BlockPos linkedPos = null;
-    private String linkedDim = null;
+
+    private TeleportMarkerData linkedTeleporter = null;
 
     public TeleporterBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
+    @SuppressWarnings("unused")
     private static final Map<Block, ResourceKey<Level>> TELEPORT_TARGETS = Map.of(
             ModBlocks.DEEP_BENEATH_TELEPORTER.get(), DimensionExpansionDimensions.DEEP_BENEATH,
             ModBlocks.MINING_TELEPORTER.get(), DimensionExpansionDimensions.MINING,
@@ -65,38 +78,79 @@ public class TeleporterBlockEntity extends BlockEntity implements INBTSerializab
         // No active ticking needed unless you want portal particles or cooldown
     }
 
-    private TeleportMarkerData linkedTeleporter = null;
+    /**
+     * Validates the current linkedTeleporter marker.
+     * If invalid, clears it and returns false.
+     *
+     * IMPORTANT: This should only be used to FAIL teleport for the RETURN teleporter.
+     * Origin teleporters should not fail just because their marker is missing/stale.
+     */
+    private boolean validateLinkedMarker(ServerLevel sourceLevel) {
+        if (linkedTeleporter == null) return false;
 
-    public void teleport(ServerPlayer player) {
-        if (player == null || level == null || level.isClientSide || !(level instanceof ServerLevel sourceLevel)) return;
+        MinecraftServer server = sourceLevel.getServer();
+        ServerLevel targetLevel = server.getLevel(linkedTeleporter.getTargetDimension());
+        if (targetLevel == null) {
+            linkedTeleporter = null;
+            setChanged();
+            return false;
+        }
+
+        BlockPos targetPos = linkedTeleporter.getTargetPos();
+        Block expectedBlock = linkedTeleporter.getSourceBlock();
+        BlockState atTarget = targetLevel.getBlockState(targetPos);
+
+        // Link is ONLY valid if the expected block is actually still present.
+        if (!atTarget.is(expectedBlock)) {
+            linkedTeleporter = null;
+            setChanged();
+            return false;
+        }
+
+        // Also ensure a TeleporterBlockEntity exists at the target (prevents weird mismatches)
+        BlockEntity be = targetLevel.getBlockEntity(targetPos);
+        if (!(be instanceof TeleporterBlockEntity)) {
+            linkedTeleporter = null;
+            setChanged();
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean teleport(ServerPlayer player) {
+        if (player == null || level == null || level.isClientSide() || !(level instanceof ServerLevel sourceLevel)) {
+            return false;
+        }
 
         MinecraftServer server = sourceLevel.getServer();
         ResourceKey<Level> sourceDim = sourceLevel.dimension();
         BlockPos sourcePos = this.getBlockPos();
 
         Block block = getBlockState().getBlock();
-        BlockState linkedBlockState = linkedTeleporter != null
-                ? linkedTeleporter.getSourceBlock().defaultBlockState()
-                : null;
 
-        // Return teleporter: always uses linked data
+        // ------------------------------------------------------------
+        // Return teleporter behavior (dimension -> overworld, etc.)
+        // ------------------------------------------------------------
         if (block == ModBlocks.OVERWORLD_RETURN_TELEPORTER.get()) {
-            if (linkedTeleporter == null) {
-                player.sendSystemMessage(Component.literal("This return teleporter is not linked."));
-                return;
+            // Must have a valid stored link. If missing/stale, do nothing (link lost).
+            if (!validateLinkedMarker(sourceLevel)) {
+                return false;
             }
 
             BlockPos targetPos = linkedTeleporter.getTargetPos();
             ResourceKey<Level> targetDim = linkedTeleporter.getTargetDimension();
-            ServerLevel targetLevel = server.getLevel(targetDim);
-            if (targetLevel == null) return;
 
-            BlockState atTarget = targetLevel.getBlockState(targetPos);
-            if ((atTarget.isAir() || atTarget.canBeReplaced()) && linkedBlockState != null) {
-                targetLevel.setBlockAndUpdate(targetPos, linkedBlockState);
+            ServerLevel targetLevel = server.getLevel(targetDim);
+            if (targetLevel == null) {
+                linkedTeleporter = null;
+                setChanged();
+                return false;
             }
 
-            BlockPos arrival = targetPos.above();
+            // IMPORTANT: Do NOT recreate the missing origin teleporter. Link must be valid to work.
+
+            BlockPos arrival = findArrivalOffset(targetLevel, targetPos.above());
             player.teleportTo(
                     targetLevel,
                     arrival.getX() + 0.5,
@@ -105,68 +159,120 @@ public class TeleporterBlockEntity extends BlockEntity implements INBTSerializab
                     player.getYRot(),
                     player.getXRot()
             );
+
             targetLevel.playSound(null, targetPos, ModSounds.TELEPORTER_ACTIVATE.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
-            return;
+            return true;
         }
 
-        // Dimensional teleporter
+        // ------------------------------------------------------------
+        // Dimensional teleporter behavior (overworld <-> dimension)
+        // ------------------------------------------------------------
         TeleporterRules rules = TELEPORT_RULES.get(block);
         if (rules == null) {
-            System.err.println("Missing TeleporterRules for block: " + block);
             player.sendSystemMessage(Component.literal("This teleporter is not linked to a dimension."));
-            return;
+            return false;
         }
 
         ResourceKey<Level> targetDim = rules.targetDimension();
         boolean goingToTarget = !sourceDim.equals(targetDim);
+
         ServerLevel targetLevel = server.getLevel(targetDim);
-        if (targetLevel == null) return;
+        if (targetLevel == null) return false;
 
         BlockPos targetTeleporterPos;
 
         if (goingToTarget) {
             BlockPos baseTargetPos = rules.resolveArrival(targetLevel, sourcePos);
-            targetTeleporterPos = baseTargetPos;
 
-            // Try to reuse nearby return teleporter
-            Optional<TeleporterBlockEntity> nearby = findLinkedTeleporterNearby(
-                    targetLevel, baseTargetPos, ModBlocks.OVERWORLD_RETURN_TELEPORTER.get(), 48
+            // Only reuse a return teleporter if it is already linked to THIS origin teleporter.
+            Optional<TeleporterBlockEntity> nearby = findReturnTeleporterLinkedToThis(
+                    targetLevel,
+                    baseTargetPos,
+                    ModBlocks.OVERWORLD_RETURN_TELEPORTER.get(),
+                    48,
+                    sourceLevel.dimension(),
+                    sourcePos,
+                    block
             );
 
             if (nearby.isPresent()) {
                 targetTeleporterPos = nearby.get().getBlockPos();
             } else {
-                // Build platform + return teleporter
-                rules.maybeBuildPlatform(targetLevel, baseTargetPos, ModBlocks.OVERWORLD_RETURN_TELEPORTER.get());
+                // IMPORTANT: Always ensure platform/return teleporter exists at the desired coordinates.
+                // Do NOT skip creation just because some other return teleporter exists nearby.
+                if (rules.buildPlatform() && rules.platformBuilder() != null) {
+                    if (!TeleportUtil.isPlatformReady(targetLevel, baseTargetPos, ModBlocks.OVERWORLD_RETURN_TELEPORTER.get())) {
+                        rules.platformBuilder().accept(targetLevel, baseTargetPos);
+                    }
+                }
 
-                // Link return teleporter back to this block
-                BlockEntity be = targetLevel.getBlockEntity(baseTargetPos);
-                if (!(be instanceof TeleporterBlockEntity)) {
-                    be = targetLevel.getBlockEntity(baseTargetPos.above());
+                // Ensure the return teleporter block exists at baseTargetPos (or baseTargetPos.above()).
+                Block returnBlock = ModBlocks.OVERWORLD_RETURN_TELEPORTER.get();
+                BlockPos returnPos = baseTargetPos;
+
+                if (!targetLevel.getBlockState(returnPos).is(returnBlock)) {
+                    BlockPos above = baseTargetPos.above();
+                    if (targetLevel.getBlockState(above).is(returnBlock)) {
+                        returnPos = above;
+                    } else {
+                        BlockState at = targetLevel.getBlockState(returnPos);
+                        if (at.isAir() || at.canBeReplaced()) {
+                            targetLevel.setBlockAndUpdate(returnPos, returnBlock.defaultBlockState());
+                        } else {
+                            BlockState atAbove = targetLevel.getBlockState(above);
+                            if (atAbove.isAir() || atAbove.canBeReplaced()) {
+                                targetLevel.setBlockAndUpdate(above, returnBlock.defaultBlockState());
+                                returnPos = above;
+                            } else {
+                                return false; // blocked at both positions
+                            }
+                        }
+                    }
                 }
-                if (be instanceof TeleporterBlockEntity targetTeleporter) {
-                    targetTeleporter.linkedTeleporter = new TeleportMarkerData(sourcePos, sourceLevel.dimension(), block);
-                    targetTeleporter.setChanged();
+
+                BlockEntity be = targetLevel.getBlockEntity(returnPos);
+                if (!(be instanceof TeleporterBlockEntity targetTeleporter)) {
+                    return false;
                 }
+
+                // Link return teleporter back to THIS origin teleporter
+                targetTeleporter.linkedTeleporter = new TeleportMarkerData(sourcePos, sourceLevel.dimension(), block);
+                targetTeleporter.setChanged();
+
+                targetTeleporterPos = targetTeleporter.getBlockPos();
             }
 
-            // Store forward link to destination
-            this.linkedTeleporter = new TeleportMarkerData(targetTeleporterPos, targetDim, ModBlocks.OVERWORLD_RETURN_TELEPORTER.get());
+            // Store forward link (this origin teleporter -> return teleporter in target dimension)
+            this.linkedTeleporter = new TeleportMarkerData(
+                    targetTeleporterPos,
+                    targetDim,
+                    ModBlocks.OVERWORLD_RETURN_TELEPORTER.get()
+            );
             this.setChanged();
 
         } else {
-            // Return trip
-            targetTeleporterPos = linkedTeleporter != null
-                    ? linkedTeleporter.getTargetPos()
-                    : sourcePos;
-
-            if (!targetLevel.getBlockState(targetTeleporterPos).is(block)) {
-                targetLevel.setBlockAndUpdate(targetTeleporterPos, block.defaultBlockState());
+            // Return trip (dimension -> overworld)
+            //
+            // Rule: origin teleporters should NOT fail with "link lost".
+            // If marker is missing/stale (e.g. teleporter moved), fall back to returning to the same XY/Z in overworld
+            // without recreating blocks.
+            if (linkedTeleporter != null) {
+                if (validateLinkedMarker(sourceLevel)) {
+                    targetTeleporterPos = linkedTeleporter.getTargetPos();
+                } else {
+                    // stale marker cleared by validateLinkedMarker
+                    targetTeleporterPos = sourcePos;
+                }
+            } else {
+                targetTeleporterPos = sourcePos;
             }
+
+            // IMPORTANT: Do NOT place/recreate the origin teleporter in the overworld.
         }
 
         // Arrival logic
         BlockPos arrival = findArrivalOffset(targetLevel, targetTeleporterPos.above());
+
         player.teleportTo(
                 targetLevel,
                 arrival.getX() + 0.5,
@@ -175,16 +281,34 @@ public class TeleporterBlockEntity extends BlockEntity implements INBTSerializab
                 player.getYRot(),
                 player.getXRot()
         );
+
         targetLevel.playSound(null, arrival, ModSounds.TELEPORTER_ACTIVATE.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
+        return true;
     }
 
-    private Optional<TeleporterBlockEntity> findLinkedTeleporterNearby(ServerLevel level, BlockPos center, Block returnTeleporterBlock, int radius) {
+    private Optional<TeleporterBlockEntity> findReturnTeleporterLinkedToThis(
+            ServerLevel level,
+            BlockPos center,
+            Block returnTeleporterBlock,
+            int radius,
+            ResourceKey<Level> expectedTargetDim,
+            BlockPos expectedTargetPos,
+            Block expectedSourceBlock
+    ) {
         for (BlockPos pos : BlockPos.withinManhattan(center, radius, radius, radius)) {
             if (!level.getBlockState(pos).is(returnTeleporterBlock)) continue;
+
             BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof TeleporterBlockEntity tbe) {
-                return Optional.of(tbe); // accept any match
-            }
+            if (!(be instanceof TeleporterBlockEntity tbe)) continue;
+
+            TeleportMarkerData marker = tbe.linkedTeleporter;
+            if (marker == null) continue;
+
+            if (!marker.getTargetDimension().equals(expectedTargetDim)) continue;
+            if (!marker.getTargetPos().equals(expectedTargetPos)) continue;
+            if (marker.getSourceBlock() != expectedSourceBlock) continue;
+
+            return Optional.of(tbe);
         }
         return Optional.empty();
     }
@@ -215,15 +339,20 @@ public class TeleporterBlockEntity extends BlockEntity implements INBTSerializab
     public static BlockPos findSurfacePosition(ServerLevel level, int x, int z) {
         int y = level.getChunkSource()
                 .getGenerator()
-                .getFirstFreeHeight(x, z, Heightmap.Types.WORLD_SURFACE, level, level.getChunkSource().randomState());
+                .getFirstFreeHeight(
+                        x, z,
+                        Heightmap.Types.WORLD_SURFACE,
+                        level,
+                        level.getChunkSource().randomState()
+                );
         return new BlockPos(x, y, z);
     }
-
 
     private BlockPos findArrivalOffset(Level level, BlockPos center) {
         for (Direction dir : Direction.Plane.HORIZONTAL) {
             BlockPos offset = center.relative(dir);
-            if (level.getBlockState(offset).isAir() || level.getBlockState(offset).canBeReplaced()) {
+            BlockState s = level.getBlockState(offset);
+            if (s.isAir() || s.canBeReplaced()) {
                 return offset;
             }
         }
@@ -243,6 +372,8 @@ public class TeleporterBlockEntity extends BlockEntity implements INBTSerializab
         super.loadAdditional(tag, lookup);
         if (tag.contains("linked_teleporter", Tag.TAG_COMPOUND)) {
             linkedTeleporter = TeleportMarkerData.load(tag.getCompound("linked_teleporter"));
+        } else {
+            linkedTeleporter = null;
         }
     }
 
@@ -256,5 +387,14 @@ public class TeleporterBlockEntity extends BlockEntity implements INBTSerializab
     @Override
     public void deserializeNBT(HolderLookup.Provider lookup, CompoundTag tag) {
         this.loadAdditional(tag, lookup);
+    }
+
+    public TeleportMarkerData getLinkedTeleporter() {
+        return linkedTeleporter;
+    }
+
+    public void clearLinkedTeleporter() {
+        linkedTeleporter = null;
+        setChanged();
     }
 }

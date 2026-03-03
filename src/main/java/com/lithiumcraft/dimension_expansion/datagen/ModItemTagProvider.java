@@ -40,5 +40,17 @@ public class ModItemTagProvider extends ItemTagsProvider {
     protected void addTags(HolderLookup.Provider provider) {
         tag(ModTags.Items.TELEPORTER_BLOCKS)
                 .add(ModBlocks.DEEP_BENEATH_TELEPORTER.asItem(), ModBlocks.MINING_TELEPORTER.asItem(), ModBlocks.STONE_BLOCK_TELEPORTER.asItem(), ModBlocks.OVERWORLD_RETURN_TELEPORTER.asItem());
+
+        tag(ModTags.Items.ORES)
+                .add(ModBlocks.QUARTZ_ORE.asItem(), ModBlocks.DEEPSLATE_QUARTZ_ORE.asItem());
+
+        tag(ModTags.Items.ORES_QUARTZ)
+                .add(ModBlocks.QUARTZ_ORE.asItem(), ModBlocks.DEEPSLATE_QUARTZ_ORE.asItem());
+
+        tag(ModTags.Items.ORES_IN_GROUND_STONE)
+                .add(ModBlocks.QUARTZ_ORE.asItem());
+
+        tag(ModTags.Items.ORES_IN_GROUND_DEEPSLATE)
+                .add(ModBlocks.DEEPSLATE_QUARTZ_ORE.asItem());
     }
 }
