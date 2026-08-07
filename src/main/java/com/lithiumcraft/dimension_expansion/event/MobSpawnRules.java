@@ -16,26 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.lithiumcraft.dimension_expansion.worldgen.spawn;
+package com.lithiumcraft.dimension_expansion.event;
 
 import com.lithiumcraft.dimension_expansion.Config;
 import com.lithiumcraft.dimension_expansion.DimensionExpansion;
 import com.lithiumcraft.dimension_expansion.worldgen.DimensionExpansionDimensions;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.levelgen.Heightmap;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
 
 import java.util.Set;
@@ -51,7 +42,6 @@ public class MobSpawnRules {
         ServerLevelAccessor level = event.getLevel();
         EntityType<?> type = event.getEntityType();
         BlockPos pos = event.getPos();
-        RandomSource random = event.getRandom();
 
         // Only override in Deep Beneath
         if (!level.getLevel().dimension().equals(DimensionExpansionDimensions.DEEP_BENEATH)) return;
@@ -63,17 +53,7 @@ public class MobSpawnRules {
 
         // Monsters OR whitelisted creatures
         if (type.getCategory() == MobCategory.MONSTER || EXTRA_CREATURES.contains(type)) {
-            // Slimes: ignore slime chunks
-            if (type == EntityType.SLIME) {
-                if (level.getBlockState(pos.below()).isValidSpawn(level, pos.below(), type)) {
-                    logDebug("Deep Beneath slime spawn", type, pos, level);
-                    event.setResult(MobSpawnEvent.SpawnPlacementCheck.Result.SUCCEED);
-                } else {
-                    event.setResult(MobSpawnEvent.SpawnPlacementCheck.Result.FAIL);
-                }
-                return;
-            }
-
+            // Slime chunks do not apply here: every monster uses the same surface test below.
             // All others: ignore light, require only a valid surface
             if (level.getBlockState(pos.below()).isValidSpawn(level, pos.below(), type)) {
                 logDebug("Deep Beneath spawn", type, pos, level);

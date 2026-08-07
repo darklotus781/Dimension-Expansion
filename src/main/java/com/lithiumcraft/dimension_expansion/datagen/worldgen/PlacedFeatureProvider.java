@@ -53,9 +53,6 @@ public class PlacedFeatureProvider {
             ResourceKey.create(Registries.PLACED_FEATURE,
                     ResourceLocation.fromNamespaceAndPath(DimensionExpansion.MOD_ID, "stalagmite"));
 
-//    public static final ResourceKey<PlacedFeature> CAVE_SPIRE =
-//            ResourceKey.create(Registries.PLACED_FEATURE,
-//                    ResourceLocation.fromNamespaceAndPath(DimensionExpansion.MOD_ID, "cave_spire"));
 
     public static final ResourceKey<PlacedFeature> COBBLE_SPIKES_PLACED =
             ResourceKey.create(Registries.PLACED_FEATURE,
@@ -140,21 +137,6 @@ public class PlacedFeatureProvider {
                 )
         );
 
-//        context.register(CAVE_SPIRE,
-//                new PlacedFeature(
-//                        configured.getOrThrow(ConfiguredFeatureProvider.CAVE_SPIRE),
-//                        List.of(
-//                                NoiseBasedCountPlacement.of(1, 400.0D, -0.2D),
-//                                CountPlacement.of(UniformInt.of(2, 4)),
-//                                InSquarePlacement.spread(),
-//                                HeightRangePlacement.uniform(
-//                                        VerticalAnchor.absolute(0),
-//                                        VerticalAnchor.absolute(256)
-//                                ),
-//                                BiomeFilter.biome()
-//                        )
-//                )
-//        );
 
         context.register(PlacedFeatureProvider.COBBLE_SPIKES_PLACED,
                 new PlacedFeature(

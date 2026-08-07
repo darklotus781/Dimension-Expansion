@@ -18,26 +18,23 @@
 
 package com.lithiumcraft.dimension_expansion.event;
 
-import com.lithiumcraft.dimension_expansion.DimensionExpansion;
 import com.lithiumcraft.dimension_expansion.registry.ModDamageTypes;
 import com.lithiumcraft.dimension_expansion.registry.ModEffects;
 import com.lithiumcraft.dimension_expansion.registry.ModSounds;
 import com.lithiumcraft.dimension_expansion.worldgen.DimensionExpansionDimensions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.LightLayer;
 import net.neoforged.bus.api.SubscribeEvent;
+import com.lithiumcraft.dimension_expansion.DimensionExpansion;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
@@ -53,18 +50,35 @@ public class DeepBeneathDarknessDamageHandler {
     private static final int WARNING_START_TICKS = 600;      // start playing sounds after 30s
     private static final int DECAY_RATE = 5; // how quickly timer drops in light
 
+    /**
+     * Drop the effect and timers for anyone outside the Deep Beneath.
+     * <p>
+     * Keyed off the effect rather than the timers: stepping into light clears the timers straight
+     * away, but the effect still has up to its full duration left, so a player leaving during that
+     * window would carry it out of the dimension.
+     */
+    private static void clearElsewhere(ServerLevel level) {
+        for (ServerPlayer player : level.players()) {
+            darkTimers.remove(player);
+            deathTimers.remove(player);
+            if (player.hasEffect(ModEffects.NIGHTWALKER)) {
+                player.removeEffect(ModEffects.NIGHTWALKER);
+            }
+        }
+    }
+
     @SubscribeEvent
     public static void onLevelTick(LevelTickEvent.Post event) {
         if (!(event.getLevel() instanceof ServerLevel level)) return;
 
-        for (ServerPlayer player : level.players()) {
-            if (!level.dimension().equals(DimensionExpansionDimensions.DEEP_BENEATH)) {
-                player.removeEffect(ModEffects.NIGHTWALKER);
-                darkTimers.remove(player);
-                deathTimers.remove(player);
-                continue;
-            }
+        // Only the Deep Beneath is dark. This does not depend on the player, so testing it per
+        // player meant every dimension paid for it on every tick.
+        if (!level.dimension().equals(DimensionExpansionDimensions.DEEP_BENEATH)) {
+            clearElsewhere(level);
+            return;
+        }
 
+        for (ServerPlayer player : level.players()) {
             if (player.isCreative() || player.isSpectator()) continue;
 
             BlockPos pos = player.blockPosition();
@@ -86,15 +100,9 @@ public class DeepBeneathDarknessDamageHandler {
                 deathTimer++;
 
                 // Once timer passes threshold, apply the effect
-                if (darkTimer  >= DARKNESS_THRESHOLD_TICKS) {
-                    Registry<MobEffect> registry = level.registryAccess().registryOrThrow(Registries.MOB_EFFECT);
-                    ResourceKey<MobEffect> key = ResourceKey.create(Registries.MOB_EFFECT, ModEffects.NIGHTWALKER.getId());
-                    Holder<MobEffect> nightWalker = registry.getHolderOrThrow(key);
-
-                    if (!player.hasEffect(nightWalker)) {
-                        // Effect itself will handle silent damage via setHealth()
-                        player.addEffect(new MobEffectInstance(nightWalker, 200, 0, false, false, false));
-                    }
+                if (darkTimer  >= DARKNESS_THRESHOLD_TICKS && !player.hasEffect(ModEffects.NIGHTWALKER)) {
+                    // Effect itself will handle silent damage via setHealth()
+                    player.addEffect(new MobEffectInstance(ModEffects.NIGHTWALKER, 200, 0, false, false, false));
                 }
 
                 // Play an ominous sound...
@@ -139,41 +147,4 @@ public class DeepBeneathDarknessDamageHandler {
         }
     }
 
-    // OLD NIGHTWALKER EFFECT
-//    @SubscribeEvent
-//    public static void onLevelTick(LevelTickEvent.Post event) {
-//        if (!(event.getLevel() instanceof ServerLevel level)) return;
-//        if (!level.dimension().equals(DimensionExpansionDimensions.DEEP_BENEATH)) return;
-//
-//        for (ServerPlayer player : level.players()) {
-//            if (player.isCreative() || player.isSpectator()) {
-//                return;
-//            }
-//
-//            BlockPos pos = player.blockPosition();
-//            int blockLight = level.getBrightness(LightLayer.BLOCK, pos);
-//
-//            Registry<MobEffect> registry = player.level().registryAccess().registryOrThrow(Registries.MOB_EFFECT);
-//            ResourceKey<MobEffect> key = ResourceKey.create(Registries.MOB_EFFECT, ModEffects.NIGHTWALKER.getId());
-//            Holder<MobEffect> nightWalker = registry.getHolderOrThrow(key);
-//
-//            MobEffectInstance instance = player.getEffect(nightWalker);
-//
-//            if (blockLight == 0) {
-//                // Only reapply if the effect is missing or about to expire (like beacon behavior)
-//                if (instance == null || instance.getDuration() <= 40) {
-//                    player.addEffect(new MobEffectInstance(nightWalker, 200, 0, false, true, false));
-//
-//                    if (instance == null) {
-//                        player.displayClientMessage(Component.translatable("message.dimension_expansion.nightwalker_warning"), false);
-//                    }
-//                }
-//            } else {
-//                // If player is in light but still has long-duration effect, trim it down
-//                if (instance != null && instance.getDuration() > 40) {
-//                    player.addEffect(new MobEffectInstance(nightWalker, 30, 0, false, true, false));
-//                }
-//            }
-//        }
-//    }
 }

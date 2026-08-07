@@ -21,14 +21,25 @@ package com.lithiumcraft.dimension_expansion.structure;
 import com.lithiumcraft.dimension_expansion.block.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class StructureBuilder {
 
+    /**
+     * Place a block without the neighbour-update cascade.
+     * <p>
+     * These builders fill thousands of positions -- the stone-block dome alone walks 21^3 twice --
+     * and {@code setBlockAndUpdate} asks every one of them to notify its neighbours. For bulk fill
+     * we only need clients told, which is what flag 2 does.
+     */
+    private static void setQuiet(ServerLevel level, BlockPos pos, BlockState state) {
+        level.setBlock(pos, state, Block.UPDATE_CLIENTS);
+    }
+
     public static void buildDeepBeneathPlatform(ServerLevel level, BlockPos center) {
         BlockState cobble = Blocks.COBBLESTONE.defaultBlockState();
-//        BlockState torch = ModBlocks.BURNABLE_TORCH.get().defaultBlockState();
         BlockState teleporter = ModBlocks.OVERWORLD_RETURN_TELEPORTER.get().defaultBlockState();
 
         // Clear space: 5x5 area, 4 blocks high (Y to Y+3)
@@ -36,8 +47,7 @@ public class StructureBuilder {
             for (int dz = -2; dz <= 2; dz++) {
                 for (int dy = 0; dy <= 3; dy++) {
                     BlockPos target = center.offset(dx, dy, dz);
-                    BlockState state = level.getBlockState(target);
-                        level.setBlockAndUpdate(target, Blocks.AIR.defaultBlockState());
+                    setQuiet(level, target, Blocks.AIR.defaultBlockState());
                 }
             }
         }
@@ -46,15 +56,10 @@ public class StructureBuilder {
         for (int dx = -2; dx <= 2; dx++) {
             for (int dz = -2; dz <= 2; dz++) {
                 BlockPos pos = center.offset(dx, 0, dz);
-                level.setBlockAndUpdate(pos, cobble);
+                setQuiet(level, pos, cobble);
             }
         }
 
-        // Torch corners (Y + 1)
-//        level.setBlockAndUpdate(center.offset(-2, 1, -2), torch);
-//        level.setBlockAndUpdate(center.offset( 2, 1, -2), torch);
-//        level.setBlockAndUpdate(center.offset(-2, 1,  2), torch);
-//        level.setBlockAndUpdate(center.offset( 2, 1,  2), torch);
 
         // Teleporter block (Y + 1)
         level.setBlockAndUpdate(center.above(), teleporter);
@@ -81,7 +86,7 @@ public class StructureBuilder {
                 for (int z = -R - 1; z <= R + 1; z++) {
                     double d2 = x * x + (y - DH) * (y - DH) + z * z;
                     if (d2 < rInner2) {
-                        level.setBlockAndUpdate(center.offset(x, y, z), Blocks.AIR.defaultBlockState());
+                        setQuiet(level, center.offset(x, y, z), Blocks.AIR.defaultBlockState());
                     }
                 }
             }
@@ -90,7 +95,7 @@ public class StructureBuilder {
         // --- 2. Floor and teleporter ---
         for (int dx = -R; dx <= R; dx++) {
             for (int dz = -R; dz <= R; dz++) {
-                level.setBlockAndUpdate(center.offset(dx, 0, dz), floor);
+                setQuiet(level, center.offset(dx, 0, dz), floor);
             }
         }
         level.setBlockAndUpdate(center, teleporter);
@@ -104,7 +109,7 @@ public class StructureBuilder {
                     // Allow ±smooth band to connect diagonal voxels
                     if (dist2 >= rInner2 - (smooth * smooth)
                             && dist2 <= rOuter2 + (smooth * smooth)) {
-                        level.setBlockAndUpdate(center.offset(x, y, z), shell);
+                        setQuiet(level, center.offset(x, y, z), shell);
                     }
                 }
             }

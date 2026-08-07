@@ -21,7 +21,6 @@ package com.lithiumcraft.dimension_expansion.datagen.worldgen;
 import com.lithiumcraft.dimension_expansion.DimensionExpansion;
 import com.lithiumcraft.dimension_expansion.block.ModBlocks;
 import com.lithiumcraft.dimension_expansion.registry.ModFeatures;
-import com.lithiumcraft.dimension_expansion.worldgen.feature.CaveSpireFeature;
 import com.lithiumcraft.dimension_expansion.worldgen.feature.config.CobbleSpikesConfig;
 import com.lithiumcraft.dimension_expansion.worldgen.feature.config.CobbleSpireConfig;
 import net.minecraft.core.registries.Registries;
@@ -36,11 +35,9 @@ import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguratio
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
-import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.List;
 
-import static com.lithiumcraft.dimension_expansion.registry.ModFeatures.FEATURES;
 
 public class ConfiguredFeatureProvider {
 
