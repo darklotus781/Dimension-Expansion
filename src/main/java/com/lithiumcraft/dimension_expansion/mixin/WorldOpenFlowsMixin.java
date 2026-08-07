@@ -18,14 +18,13 @@
 
 package com.lithiumcraft.dimension_expansion.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.client.gui.screens.worldselection.WorldOpenFlows;
-import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Debug(export = true)
 @Mixin(WorldOpenFlows.class)
 public class WorldOpenFlowsMixin {
     @ModifyVariable(method = "confirmWorldCreation", at = @At("HEAD"), argsOnly = true)
@@ -33,12 +32,15 @@ public class WorldOpenFlowsMixin {
         return Lifecycle.stable();
     }
 
-    @ModifyVariable(
+    /** Reports world gen settings as stable, suppressing the experimental-datapack prompt. */
+    @ModifyExpressionValue(
             method = "openWorldCheckWorldStemCompatibility",
-            at = @At("STORE"),
-            ordinal = 1
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/storage/WorldData;worldGenSettingsLifecycle()Lcom/mojang/serialization/Lifecycle;"
+            )
     )
-    public boolean no(boolean a) {
-        return false;
+    private Lifecycle alwaysStableLifecycle(Lifecycle original) {
+        return Lifecycle.stable();
     }
 }
