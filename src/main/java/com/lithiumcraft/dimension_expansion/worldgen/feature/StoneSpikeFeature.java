@@ -24,14 +24,23 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
-public class StalactiteFeature extends Feature<NoneFeatureConfiguration> {
+/**
+ * A tapering stone spike, grown either down from a ceiling or up from a floor.
+ * <p>
+ * Stalactites and stalagmites were two classes of 120 lines that differed in twenty, and every one
+ * of those differences was a direction flip -- which way to search for rock, which way to stack the
+ * layers, and whether the side decoration sits at the top or bottom of its block. They are the same
+ * feature, so this is one class with a growth direction and the two are registered against it.
+ */
+public class StoneSpikeFeature extends Feature<NoneFeatureConfiguration> {
 
     private static final BlockState[] VARIANTS = new BlockState[]{
             Blocks.STONE.defaultBlockState(),
@@ -40,8 +49,12 @@ public class StalactiteFeature extends Feature<NoneFeatureConfiguration> {
             Blocks.INFESTED_STONE.defaultBlockState()
     };
 
-    public StalactiteFeature(Codec<NoneFeatureConfiguration> codec) {
+    /** {@link Direction#DOWN} for a stalactite, {@link Direction#UP} for a stalagmite. */
+    private final Direction growth;
+
+    public StoneSpikeFeature(Codec<NoneFeatureConfiguration> codec, Direction growth) {
         super(codec);
+        this.growth = growth;
     }
 
     @Override
@@ -50,32 +63,31 @@ public class StalactiteFeature extends Feature<NoneFeatureConfiguration> {
         RandomSource random = ctx.random();
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos().set(ctx.origin());
 
-        // Find ceiling (move up until solid)
-        while (pos.getY() < level.getMaxBuildHeight() - 4 && level.getBlockState(pos).isAir()) {
-            pos.move(Direction.UP);
+        // Walk against the growth direction to find the rock this hangs from or stands on.
+        Direction search = growth.getOpposite();
+        int limit = growth == Direction.DOWN ? level.getMaxBuildHeight() - 4 : level.getMinBuildHeight() + 4;
+        while (beyond(pos.getY(), limit) && level.getBlockState(pos).isAir()) {
+            pos.move(search);
         }
         if (!level.getBlockState(pos).isSolid()) return false;
-        pos.move(Direction.DOWN); // into air below ceiling
+        pos.move(growth); // back into the air
 
         int height = Mth.nextInt(random, 8, 25);
         int baseRadius = Mth.nextInt(random, 3, 8);
+        int step = growth.getStepY();
         boolean placed = false;
 
-        // Build downward
         for (int y = 0; y < height; y++) {
             double taper = 1.0 - ((double) y / height);
             int radius = Math.max(1, (int) (baseRadius * taper + 0.5));
 
             for (int x = -radius; x <= radius; x++) {
                 for (int z = -radius; z <= radius; z++) {
-                    double dist = Math.sqrt(x * x + z * z);
-                    if (dist <= radius) {
-                        BlockPos placePos = pos.offset(x, -y, z);
-                        if (level.getBlockState(placePos).canBeReplaced()) {
-                            BlockState chosen = VARIANTS[random.nextInt(VARIANTS.length)];
-                            level.setBlock(placePos, chosen, 2);
-                            placed = true;
-                        }
+                    if (Math.sqrt(x * x + z * z) > radius) continue;
+                    BlockPos placePos = pos.offset(x, y * step, z);
+                    if (level.getBlockState(placePos).canBeReplaced()) {
+                        level.setBlock(placePos, VARIANTS[random.nextInt(VARIANTS.length)], 2);
+                        placed = true;
                     }
                 }
             }
@@ -83,37 +95,46 @@ public class StalactiteFeature extends Feature<NoneFeatureConfiguration> {
 
         if (!placed) return false;
 
-        // Decorative tip
-        BlockPos tip = pos.offset(0, -height, 0);
-        if (level.getBlockState(tip).canBeReplaced())
+        BlockPos tip = pos.offset(0, height * step, 0);
+        if (level.getBlockState(tip).canBeReplaced()) {
             level.setBlock(tip, Blocks.COBBLESTONE_WALL.defaultBlockState(), 2);
+        }
 
-        decorateSides(level, pos, height, baseRadius, random);
+        decorateSides(level, pos, height, baseRadius, random, step);
         return true;
     }
 
-    private void decorateSides(WorldGenLevel level, BlockPos base, int height, int radius, RandomSource random) {
+    /** Whether the search has room left to keep going in its direction. */
+    private boolean beyond(int y, int limit) {
+        return growth == Direction.DOWN ? y < limit : y > limit;
+    }
+
+    private void decorateSides(WorldGenLevel level, BlockPos base, int height, int radius,
+                               RandomSource random, int step) {
+        // A stalactite's trim hangs from the top of its block, a stalagmite's sits on the bottom.
+        Half half = growth == Direction.DOWN ? Half.TOP : Half.BOTTOM;
+
         for (int i = 0; i < 40; i++) {
             int x = Mth.nextInt(random, -radius, radius);
-            int y = -Mth.nextInt(random, 1, height - 1);
+            int y = Mth.nextInt(random, 1, height - 1) * step;
             int z = Mth.nextInt(random, -radius, radius);
             BlockPos target = base.offset(x, y, z);
 
             if (!level.getBlockState(target).isSolid()) continue;
             for (Direction dir : Direction.Plane.HORIZONTAL) {
                 BlockPos side = target.relative(dir);
-                if (level.getBlockState(side).isAir()) {
-                    if (random.nextBoolean()) {
-                        level.setBlock(side,
-                                Blocks.COBBLESTONE_STAIRS.defaultBlockState()
-                                        .setValue(StairBlock.FACING, dir.getOpposite())
-                                        .setValue(StairBlock.HALF, Half.TOP),
-                                2);
-                    } else {
-                        level.setBlock(side, Blocks.COBBLESTONE_SLAB.defaultBlockState(), 2);
-                    }
-                    break;
+                if (!level.getBlockState(side).isAir()) continue;
+
+                if (random.nextBoolean()) {
+                    level.setBlock(side,
+                            Blocks.COBBLESTONE_STAIRS.defaultBlockState()
+                                    .setValue(StairBlock.FACING, dir.getOpposite())
+                                    .setValue(StairBlock.HALF, half),
+                            2);
+                } else {
+                    level.setBlock(side, Blocks.COBBLESTONE_SLAB.defaultBlockState(), 2);
                 }
+                break;
             }
         }
     }

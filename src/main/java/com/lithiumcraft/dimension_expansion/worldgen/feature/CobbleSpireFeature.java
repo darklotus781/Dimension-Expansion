@@ -20,7 +20,6 @@ package com.lithiumcraft.dimension_expansion.worldgen.feature;
 
 import com.lithiumcraft.dimension_expansion.worldgen.feature.config.CobbleSpireConfig;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
@@ -57,8 +56,8 @@ public class CobbleSpireFeature extends Feature<CobbleSpireConfig> {
         int cz = Mth.clamp(origin.getZ(), minZ + safety, maxZ - safety);
 
         // Find cavern floor/ceiling air cells inside the band
-        Integer floorY = findFloor(level, cx, cz, cfg.yMin(), cfg.yMax());
-        Integer ceilY  = findCeiling(level, cx, cz, cfg.yMin(), cfg.yMax());
+        Integer floorY = ColumnScan.findFloor(level, cx, cz, cfg.yMin(), cfg.yMax());
+        Integer ceilY  = ColumnScan.findCeiling(level, cx, cz, cfg.yMin(), cfg.yMax());
         if (floorY == null || ceilY == null || ceilY <= floorY + 2) return false;
 
         boolean placed = false;
@@ -92,34 +91,6 @@ public class CobbleSpireFeature extends Feature<CobbleSpireConfig> {
     }
 
     // ---- helpers -------------------------------------------------------------
-
-    private Integer findFloor(WorldGenLevel level, int x, int z, int yMin, int yMax) {
-        for (int y = yMin; y < yMax; y++) {
-            BlockPos p = new BlockPos(x, y, z);
-            if (level.isEmptyBlock(p)) {
-                BlockPos below = p.below();
-                if (!level.isEmptyBlock(below)
-                        && level.getBlockState(below).isFaceSturdy(level, below, Direction.UP)) {
-                    return y; // air with sturdy below
-                }
-            }
-        }
-        return null;
-    }
-
-    private Integer findCeiling(WorldGenLevel level, int x, int z, int yMin, int yMax) {
-        for (int y = yMax - 1; y >= yMin; y--) {
-            BlockPos p = new BlockPos(x, y, z);
-            if (level.isEmptyBlock(p)) {
-                BlockPos above = p.above();
-                if (!level.isEmptyBlock(above)
-                        && level.getBlockState(above).isFaceSturdy(level, above, Direction.DOWN)) {
-                    return y; // air with sturdy above
-                }
-            }
-        }
-        return null;
-    }
 
     /**
      * Place one horizontal layer:

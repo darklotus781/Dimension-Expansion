@@ -20,7 +20,6 @@ package com.lithiumcraft.dimension_expansion.worldgen.feature;
 
 import com.lithiumcraft.dimension_expansion.worldgen.feature.config.CobbleSpikesConfig;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
@@ -66,7 +65,7 @@ public class CobbleSpikesFeature extends Feature<CobbleSpikesConfig> {
                 int z = tz * tf + oz;
                 if (x < minX || x > maxX || z < minZ || z > maxZ) continue;
 
-                Integer y = findFloor(level, x, z, cfg.yMin(), cfg.yMax());
+                Integer y = ColumnScan.findFloor(level, x, z, cfg.yMin(), cfg.yMax());
                 if (y == null) continue;
 
                 int height = cfg.floorHeight().sample(rng); // 1..3
@@ -96,7 +95,7 @@ public class CobbleSpikesFeature extends Feature<CobbleSpikesConfig> {
                 // small deterministic skip so it's not a perfect carpet
                 if ((Mth.getSeed(x, 0, z) & 0xFF) < CEILING_SKIP_OUT_OF_256) continue;
 
-                Integer y = findCeiling(level, x, z, cfg.yMin(), cfg.yMax());
+                Integer y = ColumnScan.findCeiling(level, x, z, cfg.yMin(), cfg.yMax());
                 if (y == null) continue;
 
                 int len = cfg.ceilingHeight().sample(rng); // 6..32
@@ -182,32 +181,4 @@ public class CobbleSpikesFeature extends Feature<CobbleSpikesConfig> {
     }
 
     // -------- floor/ceiling finders --------
-
-    private Integer findFloor(WorldGenLevel level, int x, int z, int yMin, int yMax) {
-        for (int y = yMin; y < yMax; y++) {
-            BlockPos p = new BlockPos(x, y, z);
-            if (level.isEmptyBlock(p)) {
-                BlockPos below = p.below();
-                if (!level.isEmptyBlock(below) &&
-                        level.getBlockState(below).isFaceSturdy(level, below, Direction.UP)) {
-                    return y;
-                }
-            }
-        }
-        return null;
-    }
-
-    private Integer findCeiling(WorldGenLevel level, int x, int z, int yMin, int yMax) {
-        for (int y = yMax - 1; y >= yMin; y--) {
-            BlockPos p = new BlockPos(x, y, z);
-            if (level.isEmptyBlock(p)) {
-                BlockPos above = p.above();
-                if (!level.isEmptyBlock(above) &&
-                        level.getBlockState(above).isFaceSturdy(level, above, Direction.DOWN)) {
-                    return y;
-                }
-            }
-        }
-        return null;
-    }
 }

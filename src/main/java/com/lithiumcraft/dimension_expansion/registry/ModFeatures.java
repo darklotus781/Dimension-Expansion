@@ -18,6 +18,7 @@
 
 package com.lithiumcraft.dimension_expansion.registry;
 
+import net.minecraft.core.Direction;
 import com.lithiumcraft.dimension_expansion.DimensionExpansion;
 import com.lithiumcraft.dimension_expansion.worldgen.feature.*;
 import com.lithiumcraft.dimension_expansion.worldgen.feature.config.CobbleSpikesConfig;
@@ -33,10 +34,10 @@ public class ModFeatures {
     public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(Registries.FEATURE, DimensionExpansion.MOD_ID);
 
     public static final DeferredHolder<Feature<?>, Feature<NoneFeatureConfiguration>> STALACTITE =
-            FEATURES.register("stalactite", () -> new StalactiteFeature(NoneFeatureConfiguration.CODEC));
+            FEATURES.register("stalactite", () -> new StoneSpikeFeature(NoneFeatureConfiguration.CODEC, Direction.DOWN));
 
     public static final DeferredHolder<Feature<?>, Feature<NoneFeatureConfiguration>> STALAGMITE =
-            FEATURES.register("stalagmite", () -> new StalagmiteFeature(NoneFeatureConfiguration.CODEC));
+            FEATURES.register("stalagmite", () -> new StoneSpikeFeature(NoneFeatureConfiguration.CODEC, Direction.UP));
 
 //    public static final DeferredHolder<Feature<?>, Feature<NoneFeatureConfiguration>> CAVE_SPIRE =
 //            FEATURES.register("cave_spire", () -> new CaveSpireFeature(NoneFeatureConfiguration.CODEC));
