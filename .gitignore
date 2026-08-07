@@ -29,3 +29,6 @@ src/generated/resources/.cache/
 
 secrets.properties
 TODO
+
+# working docs, not part of the release
+/docs/
