@@ -58,14 +58,16 @@ public class DataGenerators {
             generator.addProvider(true, new LootTableProvider(
                     packOutput,
                     Collections.emptySet(),
-                    List.of(new LootTableProvider.SubProviderEntry(ModBlockLootTableProvider::new, LootContextParamSets.BLOCK)),
+                    List.of(new LootTableProvider.SubProviderEntry(ModBlockLootTableProvider::new, LootContextParamSets.BLOCK),
+                            new LootTableProvider.SubProviderEntry(DeepBeneathEntityLootProvider::new, LootContextParamSets.ENTITY)),
                     lookupProvider
             ));
+            generator.addProvider(true, new ModGlobalLootModifierProvider(packOutput, lookupProvider));
             generator.addProvider(true, new ModRecipeProvider(packOutput, lookupProvider));
 
             BlockTagsProvider blockTagsProvider = new ModBlockTagProvider(packOutput, lookupProvider, existingFileHelper);
             generator.addProvider(true, blockTagsProvider);
-            generator.addProvider(event.includeServer(), new ModItemTagProvider(packOutput, lookupProvider, blockTagsProvider.contentsGetter(), existingFileHelper));
+            generator.addProvider(true, new ModItemTagProvider(packOutput, lookupProvider, blockTagsProvider.contentsGetter(), existingFileHelper));
             ModDamageTypeTagProvider modDamageTypeTagsProvider = new ModDamageTypeTagProvider(packOutput, lookupProvider, existingFileHelper);
             generator.addProvider(true, modDamageTypeTagsProvider);
 

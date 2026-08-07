@@ -1,0 +1,16 @@
+{
+  "type": "dimension_expansion:remove_item",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:entities/ghast"
+    },
+    {
+      "condition": "minecraft:location_check",
+      "predicate": {
+        "dimension": "dimension_expansion:deep_beneath"
+      }
+    }
+  ],
+  "item": "minecraft:ghast_tear"
+}
