@@ -5,6 +5,11 @@ All released versions of Dimension Expansion, for Minecraft 1.21.1.
 The per-version files under `changelog/` are what CurseForge and Modrinth display, and are kept in
 sync with this file.
 
+## [1.2.10]
+
+**Changed**
+- Packaging only. Nothing about the mod behaves differently in game.
+
 ## [1.2.9]
 
 **Added**
