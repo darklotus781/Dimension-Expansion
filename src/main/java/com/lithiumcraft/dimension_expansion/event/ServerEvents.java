@@ -23,14 +23,12 @@ import com.lithiumcraft.dimension_expansion.block.ModBlocks;
 import com.lithiumcraft.dimension_expansion.blockentity.TeleporterBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -42,21 +40,28 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 @EventBusSubscriber(modid = DimensionExpansion.MOD_ID)
 public class ServerEvents {
 
+    /** Built once; this handler runs on every right-click in the game. */
+    private static final TagKey<Block> TELEPORTER_BLOCKS =
+            BlockTags.create(DimensionExpansion.rl("teleporter_blocks"));
+
     @SubscribeEvent
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         Level level = event.getLevel();
-        Player player = event.getEntity();
-
-        if (!(player instanceof ServerPlayer serverPlayer) || level.isClientSide()) return;
-
         BlockPos pos = event.getPos();
         BlockState state = level.getBlockState(pos);
 
-        ResourceLocation tagId = DimensionExpansion.rl("teleporter_blocks");
-        TagKey<Block> teleportTag = BlockTags.create(tagId);
+        if (!state.is(TELEPORTER_BLOCKS)) return;
 
-        // Return if not a teleporter block.
-        if (!state.is(teleportTag)) return;
+        // The client has to consume the interaction as well, or the arm never swings and the
+        // click falls through to placing whatever is in hand. This handler used to return early
+        // on the client, so a teleporter gave no feedback at all when clicked.
+        if (level.isClientSide()) {
+            event.setCanceled(true);
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            return;
+        }
+
+        if (!(event.getEntity() instanceof ServerPlayer serverPlayer)) return;
 
         BlockEntity be = level.getBlockEntity(pos);
         if (!(be instanceof TeleporterBlockEntity teleporter)) return;
@@ -66,19 +71,15 @@ public class ServerEvents {
         event.setCanceled(true);
         event.setCancellationResult(success ? InteractionResult.SUCCESS : InteractionResult.FAIL);
 
-        // Only the OVERWORLD_RETURN_TELEPORTER should ever show "link lost".
-        if (!success && state.is(ModBlocks.OVERWORLD_RETURN_TELEPORTER.get())) {
-            level.playSound(
-                    null,
-                    pos,
-                    SoundEvents.VILLAGER_NO,
-                    SoundSource.BLOCKS,
-                    1.0F,
-                    1.0F
-            );
-
+        if (!success) {
+            // Previously only the return teleporter said anything, so an origin teleporter that
+            // could not place its destination simply did nothing with no explanation.
+            boolean isReturn = state.is(ModBlocks.OVERWORLD_RETURN_TELEPORTER.get());
+            level.playSound(null, pos, SoundEvents.VILLAGER_NO, SoundSource.BLOCKS, 1.0F, 1.0F);
             serverPlayer.displayClientMessage(
-                    Component.literal("Teleporter link lost."),
+                    Component.literal(isReturn
+                            ? "Teleporter link lost."
+                            : "Cannot open a way through -- the destination is blocked."),
                     true
             );
         }

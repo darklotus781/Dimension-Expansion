@@ -22,7 +22,6 @@ import com.lithiumcraft.dimension_expansion.DimensionExpansion;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
-import java.util.Locale;
 
 public class ModLangProvider extends LanguageProvider {
 
@@ -37,7 +36,7 @@ public class ModLangProvider extends LanguageProvider {
         add("block.dimension_expansion.deep_beneath_teleporter", "Deep Beneath Teleporter");
         add("block.dimension_expansion.mining_teleporter", "Mining Teleporter");
         add("block.dimension_expansion.stone_block_teleporter", "Stone Block Teleporter");
-        add("block.dimension_expansion.overworld_return_teleporter", "Overworld Teleporter");
+        add("block.dimension_expansion.overworld_return_teleporter", "Return Teleporter");
         add("block.dimension_expansion.blank_teleporter", "Teleporter Template");
         add("item.dimension_expansion.ender_gem", "Ender Gem");
         add("item.dimension_expansion.ender_cream", "Ender Cream");

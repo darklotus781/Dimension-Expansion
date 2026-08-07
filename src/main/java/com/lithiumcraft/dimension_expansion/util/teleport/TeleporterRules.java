@@ -22,7 +22,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 
 import javax.annotation.Nullable;
 import java.util.function.BiConsumer;
@@ -38,13 +37,4 @@ public record TeleporterRules(
         return arrivalPositionFunction.apply(level, basePos);
     }
 
-    public void maybeBuildPlatform(ServerLevel level, BlockPos center, Block teleporterBlock) {
-        if (!buildPlatform || platformBuilder == null) return;
-
-        if (TeleportUtil.hasNearbyTeleporter(level, center, teleporterBlock, 48)) return;
-
-        if (!TeleportUtil.isPlatformReady(level, center, teleporterBlock)) {
-            platformBuilder.accept(level, center);
-        }
-    }
 }

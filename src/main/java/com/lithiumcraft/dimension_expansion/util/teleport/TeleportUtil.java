@@ -19,36 +19,22 @@
 package com.lithiumcraft.dimension_expansion.util.teleport;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 
 public class TeleportUtil {
 
-    public static boolean hasNearbyTeleporter(ServerLevel level, BlockPos center, Block targetTeleporterBlock, int radius) {
-        int r = Math.max(1, radius);
-
-        for (BlockPos pos : BlockPos.withinManhattan(center, r, r, r)) {
-            if (level.getBlockState(pos).is(targetTeleporterBlock)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
+    /**
+     * Whether the return teleporter for <em>this arrival point</em> is already there.
+     * <p>
+     * This used to scan a radius of 16 -- 35,937 positions -- for any return teleporter at all, and
+     * report ready if it found one. Standing up a second teleporter near an existing one therefore
+     * saw the neighbour's platform, skipped building its own, then failed to place a teleporter into
+     * solid rock. The caller's own comment says not to skip creation because some other teleporter
+     * is nearby; this now matches that.
+     */
     public static boolean isPlatformReady(Level level, BlockPos center, Block teleporterBlock) {
-        int radius = 16;
-
-        for (BlockPos pos : BlockPos.withinManhattan(center, radius, radius, radius)) {
-            if (level.getBlockState(pos).is(teleporterBlock)) {
-                return true;
-            }
-        }
-
-        return false;
+        return level.getBlockState(center).is(teleporterBlock)
+                || level.getBlockState(center.above()).is(teleporterBlock);
     }
 }

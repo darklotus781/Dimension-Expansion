@@ -19,6 +19,7 @@
 package com.lithiumcraft.dimension_expansion.blockentity;
 
 import com.lithiumcraft.dimension_expansion.block.ModBlocks;
+import com.lithiumcraft.dimension_expansion.registry.ModPoiTypes;
 import com.lithiumcraft.dimension_expansion.registry.ModSounds;
 import com.lithiumcraft.dimension_expansion.structure.StructureBuilder;
 import com.lithiumcraft.dimension_expansion.util.teleport.TeleportMarkerData;
@@ -35,6 +36,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -65,17 +67,6 @@ public class TeleporterBlockEntity extends BlockEntity implements INBTSerializab
 
     public TeleporterBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
-    }
-
-    @SuppressWarnings("unused")
-    private static final Map<Block, ResourceKey<Level>> TELEPORT_TARGETS = Map.of(
-            ModBlocks.DEEP_BENEATH_TELEPORTER.get(), DimensionExpansionDimensions.DEEP_BENEATH,
-            ModBlocks.MINING_TELEPORTER.get(), DimensionExpansionDimensions.MINING,
-            ModBlocks.STONE_BLOCK_TELEPORTER.get(), DimensionExpansionDimensions.STONE_BLOCK
-    );
-
-    public static void tickServer(Level level, BlockPos pos, BlockState state, TeleporterBlockEntity be) {
-        // No active ticking needed unless you want portal particles or cooldown
     }
 
     /**
@@ -165,9 +156,10 @@ public class TeleporterBlockEntity extends BlockEntity implements INBTSerializab
         }
 
         // ------------------------------------------------------------
-        // Dimensional teleporter behavior (overworld <-> dimension)
+        // Dimensional teleporter behavior. The origin can be any dimension, not just the overworld;
+        // the return marker records whichever one you left from.
         // ------------------------------------------------------------
-        TeleporterRules rules = TELEPORT_RULES.get(block);
+        TeleporterRules rules = teleportRules().get(block);
         if (rules == null) {
             player.sendSystemMessage(Component.literal("This teleporter is not linked to a dimension."));
             return false;
@@ -184,16 +176,19 @@ public class TeleporterBlockEntity extends BlockEntity implements INBTSerializab
         if (goingToTarget) {
             BlockPos baseTargetPos = rules.resolveArrival(targetLevel, sourcePos);
 
-            // Only reuse a return teleporter if it is already linked to THIS origin teleporter.
-            Optional<TeleporterBlockEntity> nearby = findReturnTeleporterLinkedToThis(
-                    targetLevel,
-                    baseTargetPos,
-                    ModBlocks.OVERWORLD_RETURN_TELEPORTER.get(),
-                    48,
-                    sourceLevel.dimension(),
-                    sourcePos,
-                    block
-            );
+            // Fast path: we already stored where the return teleporter is. If it still checks out,
+            // use it and skip searching the world entirely -- which is the case on every trip after
+            // the first.
+            Optional<TeleporterBlockEntity> nearby = resolveStoredReturnTeleporter(
+                    targetLevel, sourceLevel.dimension(), sourcePos, block);
+
+            // Otherwise look for any return teleporter in range, the way a nether portal does,
+            // so a second teleporter nearby reuses the existing one instead of littering the
+            // dimension with its own.
+            if (nearby.isEmpty()) {
+                nearby = findNearestReturnTeleporter(targetLevel, baseTargetPos, sourceLevel.dimension(),
+                        sourcePos, block);
+            }
 
             if (nearby.isPresent()) {
                 targetTeleporterPos = nearby.get().getBlockPos();
@@ -251,7 +246,7 @@ public class TeleporterBlockEntity extends BlockEntity implements INBTSerializab
             this.setChanged();
 
         } else {
-            // Return trip (dimension -> overworld)
+            // Return trip, back to whichever dimension the marker recorded.
             //
             // Rule: origin teleporters should NOT fail with "link lost".
             // If marker is missing/stale (e.g. teleporter moved), fall back to returning to the same XY/Z in overworld
@@ -286,34 +281,90 @@ public class TeleporterBlockEntity extends BlockEntity implements INBTSerializab
         return true;
     }
 
-    private Optional<TeleporterBlockEntity> findReturnTeleporterLinkedToThis(
-            ServerLevel level,
-            BlockPos center,
-            Block returnTeleporterBlock,
-            int radius,
-            ResourceKey<Level> expectedTargetDim,
-            BlockPos expectedTargetPos,
-            Block expectedSourceBlock
+    /** Nether portals search 128 blocks; return teleporters match that. */
+    private static final int SEARCH_RADIUS = 128;
+
+    /**
+     * The return teleporter this origin already points at, if the link is still good and still
+     * points back here. Costs a handful of block reads instead of a search.
+     */
+    private Optional<TeleporterBlockEntity> resolveStoredReturnTeleporter(
+            ServerLevel targetLevel,
+            ResourceKey<Level> sourceDim,
+            BlockPos sourcePos,
+            Block sourceBlock
     ) {
-        for (BlockPos pos : BlockPos.withinManhattan(center, radius, radius, radius)) {
-            if (!level.getBlockState(pos).is(returnTeleporterBlock)) continue;
+        if (linkedTeleporter == null) return Optional.empty();
+        if (!linkedTeleporter.getTargetDimension().equals(targetLevel.dimension())) return Optional.empty();
 
-            BlockEntity be = level.getBlockEntity(pos);
-            if (!(be instanceof TeleporterBlockEntity tbe)) continue;
+        BlockPos pos = linkedTeleporter.getTargetPos();
+        if (!targetLevel.getBlockState(pos).is(ModBlocks.OVERWORLD_RETURN_TELEPORTER.get())) return Optional.empty();
+        if (!(targetLevel.getBlockEntity(pos) instanceof TeleporterBlockEntity tbe)) return Optional.empty();
 
-            TeleportMarkerData marker = tbe.linkedTeleporter;
-            if (marker == null) continue;
-
-            if (!marker.getTargetDimension().equals(expectedTargetDim)) continue;
-            if (!marker.getTargetPos().equals(expectedTargetPos)) continue;
-            if (marker.getSourceBlock() != expectedSourceBlock) continue;
-
-            return Optional.of(tbe);
-        }
-        return Optional.empty();
+        return Optional.of(tbe);
     }
 
-    private static final Map<Block, TeleporterRules> TELEPORT_RULES = Map.of(
+    /**
+     * The nearest return teleporter within {@link #SEARCH_RADIUS}, wherever it came from.
+     * <p>
+     * Uses the point-of-interest index rather than reading block states. A 128-block scan would be
+     * sixteen million positions, each of which would generate the chunk it landed in; the POI index
+     * is read from the region files and is what vanilla's own portal search uses.
+     * <p>
+     * An existing teleporter keeps the link it already has, so a portal goes on sending you where it
+     * always did. Only if the origin it pointed at is gone does the teleporter being used now claim
+     * it, which recycles abandoned teleporters instead of leaving dead ends.
+     */
+    private Optional<TeleporterBlockEntity> findNearestReturnTeleporter(
+            ServerLevel targetLevel,
+            BlockPos around,
+            ResourceKey<Level> sourceDim,
+            BlockPos sourcePos,
+            Block sourceBlock
+    ) {
+        Optional<BlockPos> found = targetLevel.getPoiManager().findClosest(
+                holder -> holder.is(ModPoiTypes.RETURN_TELEPORTER.getKey()),
+                around,
+                SEARCH_RADIUS,
+                PoiManager.Occupancy.ANY);
+
+        if (found.isEmpty()) return Optional.empty();
+        BlockPos pos = found.get();
+        if (!(targetLevel.getBlockEntity(pos) instanceof TeleporterBlockEntity tbe)) return Optional.empty();
+
+        if (!tbe.hasLivingLink(targetLevel)) {
+            tbe.linkedTeleporter = new TeleportMarkerData(sourcePos, sourceDim, sourceBlock);
+            tbe.setChanged();
+        }
+        return Optional.of(tbe);
+    }
+
+    /** Whether this teleporter's link still points at a teleporter that exists. */
+    private boolean hasLivingLink(ServerLevel selfLevel) {
+        if (linkedTeleporter == null) return false;
+        ServerLevel other = selfLevel.getServer().getLevel(linkedTeleporter.getTargetDimension());
+        if (other == null) return false;
+        BlockPos pos = linkedTeleporter.getTargetPos();
+        if (!other.hasChunkAt(pos)) return true; // unloaded: assume intact rather than steal it
+        return other.getBlockState(pos).is(linkedTeleporter.getSourceBlock());
+    }
+
+    /**
+     * Built on first use rather than in a static initialiser: the keys call {@code get()} on
+     * DeferredBlocks, which are not bound until registration has run. A static map works only as
+     * long as nothing loads this class early, which is a trap rather than a guarantee.
+     */
+    private static Map<Block, TeleporterRules> teleportRules;
+
+    private static Map<Block, TeleporterRules> teleportRules() {
+        if (teleportRules == null) {
+            teleportRules = buildTeleportRules();
+        }
+        return teleportRules;
+    }
+
+    private static Map<Block, TeleporterRules> buildTeleportRules() {
+        return Map.of(
             ModBlocks.DEEP_BENEATH_TELEPORTER.get(), new TeleporterRules(
                     DimensionExpansionDimensions.DEEP_BENEATH,
                     true,
@@ -332,9 +383,10 @@ public class TeleporterBlockEntity extends BlockEntity implements INBTSerializab
                     DimensionExpansionDimensions.STONE_BLOCK,
                     true,
                     (level, base) -> new BlockPos(base.getX(), 64, base.getZ()),
-                    StructureBuilder::buildStoneBlockPlatform
-            )
-    );
+                        StructureBuilder::buildStoneBlockPlatform
+                )
+        );
+    }
 
     public static BlockPos findSurfacePosition(ServerLevel level, int x, int z) {
         int y = level.getChunkSource()
@@ -348,15 +400,34 @@ public class TeleporterBlockEntity extends BlockEntity implements INBTSerializab
         return new BlockPos(x, y, z);
     }
 
+    /**
+     * Somewhere next to the teleporter a player can actually stand.
+     * <p>
+     * A player is two blocks tall, so checking only the block at their feet let them arrive inside
+     * a wall and suffocate. Both the feet and head space have to be clear.
+     */
     private BlockPos findArrivalOffset(Level level, BlockPos center) {
         for (Direction dir : Direction.Plane.HORIZONTAL) {
             BlockPos offset = center.relative(dir);
-            BlockState s = level.getBlockState(offset);
-            if (s.isAir() || s.canBeReplaced()) {
+            if (canStandAt(level, offset)) {
                 return offset;
             }
         }
-        return center; // fallback to directly above the teleporter
+        // Directly above the teleporter, if that is clear.
+        if (canStandAt(level, center)) {
+            return center;
+        }
+        // Nothing around is clear, so go one higher rather than drop them into a wall.
+        return center.above();
+    }
+
+    /** Whether a player fits here: feet and head space both free. */
+    private static boolean canStandAt(Level level, BlockPos pos) {
+        return isFree(level.getBlockState(pos)) && isFree(level.getBlockState(pos.above()));
+    }
+
+    private static boolean isFree(BlockState state) {
+        return state.isAir() || state.canBeReplaced();
     }
 
     @Override

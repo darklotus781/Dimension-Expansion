@@ -23,14 +23,9 @@ import com.lithiumcraft.dimension_expansion.blockentity.TeleporterBlockEntity;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
@@ -45,18 +40,6 @@ public class DeepBeneathTeleporterBlock extends AbstractTeleporterBlock {
         return new TeleporterBlockEntity(ModBlockEntities.DEEP_BENEATH_TELEPORTER.get(), pos, state);
     }
 
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        if (!level.isClientSide && type == ModBlockEntities.DEEP_BENEATH_TELEPORTER.get()) {
-            return (lvl, pos, blockState, be) -> {
-                if (be instanceof TeleporterBlockEntity teleporter) {
-                    TeleporterBlockEntity.tickServer(lvl, pos, blockState, teleporter);
-                }
-            };
-        }
-        return null;
-    }
 
     @Override
     protected MapCodec<? extends BaseEntityBlock> codec() {
