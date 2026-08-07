@@ -198,12 +198,15 @@ idea {
 // ─────────────────────────────────────────────────────────────
 // Publishing (CurseForge + Modrinth)
 //
-// CurseForge rejects any file that carries no version from its "environment" group with error 1021,
-// and the Java version has to be sent or it must be set by hand on the site after every release.
+// CurseForge rejects any file carrying no version from its "environment" group with error 1021, and
+// the Java version has to be sent or it must be set by hand on the site after every release.
 // CurseForgeGradle sends both; the cursegradle bundled in unified-publishing could send neither.
 //
 //   ./gradlew publishAll -PdryRun     resolve and log everything, upload nothing
 //   ./gradlew publishAll              CurseForge first, then Modrinth
+//
+// CurseForge has no idempotency, so a repeated upload creates a duplicate file to delete by hand.
+// Always dry run first.
 // ─────────────────────────────────────────────────────────────
 
 // Read at publish time, not at config time. tasks.register defers this to when a publish is
@@ -216,11 +219,15 @@ def releaseChangelog = {
     file.text
 }
 
-// Comma-separated CurseForge/Modrinth slugs; empty when the mod has no dependencies.
-def requiredDeps = ((findProperty('curseforge_required_deps') ?: '') as String)
-        .split(',').collect { it.trim() }.findAll { it }
+// Comma-separated project slugs, absent or empty when the mod has none.
+def slugList = { String key ->
+    ((findProperty(key) ?: '') as String).split(',').collect { it.trim() }.findAll { it }
+}
+def requiredDeps = slugList('publish_required_deps')
+def optionalDeps = slugList('publish_optional_deps')
 
 tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+    group = 'publishing'
     dependsOn tasks.jar
     apiToken = cfToken ?: ''
     debugMode = project.hasProperty('dryRun')
@@ -236,6 +243,7 @@ tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurs
     mainFile.addEnvironment('Client')
     mainFile.addEnvironment('Server')
     requiredDeps.each { mainFile.addRequirement(it) }
+    optionalDeps.each { mainFile.addOptional(it) }
 }
 
 modrinth {
@@ -251,6 +259,7 @@ modrinth {
     debugMode = project.hasProperty('dryRun')
     dependencies {
         requiredDeps.each { required.project it }
+        optionalDeps.each { optional.project it }
     }
 }
 

@@ -43,7 +43,7 @@ LOADER="NeoForge"
 # Comma-separated CurseForge slugs, empty or absent when the mod has no dependencies. The Gradle
 # path declares these for Modrinth; CurseForge needs them in this payload or the file uploads with
 # no dependency listed.
-CF_REQUIRED_DEPS=$(prop curseforge_required_deps gradle.properties)
+CF_REQUIRED_DEPS=$(prop publish_required_deps gradle.properties)
 
 if [[ ! -f secrets.properties ]]; then
     echo "error: secrets.properties not found; cf_token must live there" >&2
